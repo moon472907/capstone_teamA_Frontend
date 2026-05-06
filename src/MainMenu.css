@@ -1,0 +1,191 @@
+/* ============================================
+   메인 메뉴 — Chunky Pixel + KNU Theme
+   ============================================ */
+
+.main-menu-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(180deg,
+    #85CDEE 0%,
+    #A0D8F1 35%,
+    #C8E0B8 60%,
+    #A8C878 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bg-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* 사운드 토글 */
+.settings-btn-top-right {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pixel);
+  background: var(--surface);
+  border: var(--border-thick) solid var(--outline-color);
+  box-shadow: var(--pixel-panel-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  z-index: 20;
+  transition: all 0.1s;
+}
+
+.settings-btn-top-right:active {
+  transform: translateY(4px);
+  box-shadow: inset 3px 3px 0 rgba(0,0,0,0.1);
+}
+
+/* 메뉴 콘텐츠 */
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  z-index: 10;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* 게임 타이틀 */
+.game-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  line-height: 1.1;
+  position: relative;
+  animation: floatSlow 3s ease-in-out infinite; /* 위아래로 둥둥 떠다니는 애니메이션 */
+}
+
+.title-text {
+  font-size: 80px;
+  color: #FFFFFF;
+  letter-spacing: 12px;
+  /* 1. 외곽선, 2. 3D 입체감, 3. 드롭 그림자 */
+  text-shadow: 
+    -3px -3px 0 var(--outline-color),  
+     3px -3px 0 var(--outline-color),
+    -3px  3px 0 var(--outline-color),
+     3px  3px 0 var(--outline-color),
+     0px  6px 0 var(--knu-blue),
+     0px 12px 0 var(--knu-blue-dark),
+     0px 16px 0 var(--outline-color),
+     0px 24px 10px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.game-title span:nth-child(2) {
+  color: var(--knu-orange);
+  font-size: 100px; /* '마블' 글씨를 더 크게 강조 */
+  margin-top: -10px; /* 위 글씨와 약간 겹치게 타이포그래피 조절 */
+  text-shadow: 
+    -3px -3px 0 var(--outline-color),  
+     3px -3px 0 var(--outline-color),
+    -3px  3px 0 var(--outline-color),
+     3px  3px 0 var(--outline-color),
+     0px  6px 0 var(--knu-orange-dark),
+     0px 12px 0 #9C4221,
+     0px 16px 0 var(--outline-color),
+     0px 24px 10px rgba(0,0,0,0.3);
+  z-index: 3;
+}
+
+/* 버튼 그룹 */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-main {
+  background: var(--knu-orange);
+  color: var(--text-light);
+  border: var(--border-thick) solid var(--outline-color);
+  border-radius: var(--radius-pixel);
+  padding: 16px 48px;
+  font-size: 24px;
+  box-shadow: var(--pixel-btn-orange);
+  text-shadow: 2px 2px 0 var(--outline-color);
+  transition: all 0.1s;
+}
+
+.btn-main:active {
+  transform: translateY(6px);
+  box-shadow: inset 4px 4px 0 rgba(0,0,0,0.2), 0 0 0 var(--outline-color);
+}
+
+.sub-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.glass-btn {
+  background: var(--surface);
+  border: var(--border-thick) solid var(--outline-color);
+  border-radius: var(--radius-pixel);
+  padding: 12px 24px;
+  font-size: 16px;
+  color: var(--knu-blue);
+  box-shadow: var(--pixel-panel-shadow);
+  transition: all 0.1s;
+}
+
+.glass-btn:active {
+  transform: translateY(4px);
+  box-shadow: inset 3px 3px 0 rgba(0,0,0,0.1);
+}
+
+/* 배경 구름 */
+.menu-cloud {
+  position: absolute;
+  font-size: 64px;
+  opacity: 0.3;
+  z-index: 1;
+  animation: cloudDrift linear infinite;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+
+.menu-cloud:nth-child(1) {
+  top: 10%;
+  animation-duration: 50s;
+  font-size: 80px;
+  opacity: 0.25;
+}
+
+.menu-cloud:nth-child(2) {
+  top: 25%;
+  animation-duration: 65s;
+  animation-delay: -20s;
+}
+
+.menu-cloud:nth-child(3) {
+  top: 5%;
+  animation-duration: 55s;
+  animation-delay: -35s;
+  font-size: 48px;
+  opacity: 0.2;
+}
+
+/* 반짝이는 별 (사각형 픽셀) */
+.menu-star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  z-index: 1;
+  animation: twinkle ease-in-out infinite;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+}
