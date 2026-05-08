@@ -3,13 +3,13 @@
    ============================================ */
 
 :root {
-  /* === 강원대 색상 === */
-  --knu-blue: #005BAC;
-  --knu-blue-dark: #003d73;
-  --knu-blue-light: #e8f2fc;
-  --knu-orange: #FF8C00;
-  --knu-orange-dark: #c05621;
-  --knu-orange-light: #FFF3E0;
+  /* === 강원대 색상 (Vibrant Theme) === */
+  --knu-blue: #006ddb; /* 기존 #005BAC에서 채도와 명도를 높임 */
+  --knu-blue-dark: #004c99;
+  --knu-blue-light: #eaf4ff;
+  --knu-orange: #FF9D00; /* 기존 #FF8C00에서 밝고 쨍하게 조절 */
+  --knu-orange-dark: #cc7a00;
+  --knu-orange-light: #fff8e6;
   --gomduri-blue: #85CDEE;
   --gomduri-blue-dim: rgba(133, 205, 238, 0.3);
 
@@ -113,13 +113,13 @@ button {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: var(--bg-base);
+  background: transparent; /* 배경 맵이 보이도록 투명 유지 */
 }
 
 .top-info {
   position: absolute;
   top: 16px;
-  right: 16px;
+  left: 100px; /* 다시 좌측 상단 타이틀 옆으로 복구 */
   z-index: 10;
   display: flex;
   align-items: center;
@@ -130,15 +130,17 @@ button {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-pixel);
-  background: var(--surface);
+  background: rgba(0, 91, 172, 0.85); /* 선명한 블루 */
   border: var(--border-thick) solid var(--outline-color);
-  box-shadow: inset 3px 3px 0 rgba(255,255,255,0.8), inset -3px -3px 0 rgba(0,0,0,0.1), 0 4px 0 var(--outline-color);
+  box-shadow: inset 3px 3px 0 rgba(255,255,255,0.4), inset -3px -3px 0 rgba(0,0,0,0.2), 0 4px 0 var(--knu-blue-dark);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  color: var(--text-primary);
+  color: #FFFFFF;
   transition: all 0.1s;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .settings-btn:active {
@@ -147,14 +149,22 @@ button {
 }
 
 .turn-badge {
-  background: var(--knu-blue);
-  color: var(--text-light);
-  padding: 8px 16px;
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 91, 172, 0.9); /* 쨍한 블루 */
+  color: #FFFFFF;
+  padding: 8px 24px;
   border-radius: var(--radius-pixel);
-  font-size: 16px;
+  font-size: 18px;
   border: var(--border-thick) solid var(--outline-color);
-  box-shadow: var(--pixel-btn-blue);
+  box-shadow: inset 4px 4px 0 rgba(255,255,255,0.3), 0 6px 0 var(--knu-blue-dark);
   text-shadow: 2px 2px 0 var(--knu-blue-dark);
+  z-index: 20;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .board-wrapper {
@@ -168,7 +178,7 @@ button {
 .board-area {
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.05);
+  background: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -185,38 +195,38 @@ button {
 .board-placeholder-title {
   font-size: 3rem;
   font-weight: 900;
-  color: var(--knu-blue);
+  color: rgba(180, 220, 140, 0.6);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
 .board-placeholder-desc {
   font-size: 1.2rem;
-  color: #4a5568;
+  color: rgba(180, 200, 160, 0.5);
   margin-top: 10px;
 }
 
-/* 주사위 - 도크와 겹치지 않게 높이 올림 */
+/* 주사위 - 좌측 하단 */
 .dice-container {
   position: absolute;
-  bottom: 220px; /* 여기서 도크와 겹침 해결 */
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 24px;
+  left: 24px;
   z-index: 20;
 }
 
 .dice-button {
-  min-width: 160px;
-  height: 64px;
+  min-width: 170px;
+  height: 68px;
   padding: 0 24px;
-  background: var(--knu-orange);
+  background: linear-gradient(180deg, #FFB800 0%, #FF8C00 100%); /* 쨍한 오렌지/옐로 그라데이션 */
   border-radius: var(--radius-pixel);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  color: var(--text-light);
-  border: var(--border-thick) solid var(--outline-color);
-  box-shadow: var(--pixel-btn-orange);
-  text-shadow: 2px 2px 0 var(--knu-orange-dark);
+  font-size: 26px;
+  color: #FFFFFF;
+  border: var(--border-thick) solid #8a4d00;
+  box-shadow: inset 4px 4px 0px rgba(255,255,255,0.5), 0 8px 0px #8a4d00;
+  text-shadow: 2px 2px 0 #8a4d00;
   transition: all 0.1s;
 }
 
@@ -225,16 +235,14 @@ button {
   box-shadow: inset 4px 4px 0px rgba(0,0,0,0.2), 0 0 0 var(--outline-color);
 }
 
-/* 플레이어 독 */
+/* 플레이어 독 — 우측 상단 세로 배치 (마리오파티 스타일) */
 .players-dock {
   position: absolute;
-  bottom: 16px;
-  left: 0;
-  width: 100%;
-  padding: 0 16px;
+  top: 16px;
+  right: 16px;
   display: flex;
-  justify-content: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
   z-index: 30;
 }
 
@@ -242,32 +250,31 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 3px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.9); /* 대비를 위해 밝게 처리 */
+  border: 4px solid var(--knu-blue);
   border-radius: var(--radius-pixel);
   padding: 8px 14px;
   min-width: 180px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
   transition: all 0.15s ease-out;
 }
 
 .player-badge.active {
-  transform: translateY(-6px);
-  border-color: var(--knu-orange);
-  background: rgba(255, 140, 0, 0.15);
-  box-shadow: 0 4px 0 var(--knu-orange-dark), 0 0 12px rgba(255,140,0,0.3);
+  transform: translateX(-8px);
+  border-color: #FF8C00;
+  background: #FFFBF0;
+  box-shadow: -6px 0 0 #c05621, 0 8px 12px rgba(255,140,0,0.3);
 }
 
 .badge-icon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: var(--radius-pixel);
   border: 3px solid var(--outline-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 24px;
   flex-shrink: 0;
 }
 
@@ -279,13 +286,9 @@ button {
 }
 
 .badge-name {
-  font-size: 14px;
-  color: #FFFFFF;
-  text-shadow: 
-    -1px -1px 0 var(--outline-color),
-     1px -1px 0 var(--outline-color),
-    -1px  1px 0 var(--outline-color),
-     1px  1px 0 var(--outline-color);
+  font-size: 15px;
+  color: var(--knu-blue-dark);
+  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -299,8 +302,7 @@ button {
 
 .badge-gpa {
   font-size: 12px;
-  color: #E2E8F0;
-  text-shadow: 1px 1px 0 var(--outline-color);
+  color: var(--text-secondary);
 }
 
 .badge-card {
@@ -312,7 +314,7 @@ button {
 .turn-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 91, 172, 0.4);
+  background: rgba(0, 61, 115, 0.6); /* 쨍한 블루 오버레이 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -321,16 +323,16 @@ button {
 }
 
 .turn-alert {
-  background: var(--surface);
+  background: #FFFFFF;
   padding: 40px 80px;
   border-radius: var(--radius-pixel);
-  border: var(--border-thick) solid var(--outline-color);
+  border: var(--border-thick) solid var(--knu-blue-dark);
   box-shadow: var(--pixel-panel-shadow);
   animation: popBounce 0.35s ease-out forwards;
 }
 
 .turn-alert h2 {
-  font-size: 32px;
+  font-size: 36px;
   color: var(--knu-blue);
   text-shadow: 2px 2px 0 var(--knu-blue-light);
 }
@@ -339,8 +341,8 @@ button {
 .settings-dropdown {
   position: absolute;
   top: 56px;
-  right: 0;
-  background: var(--surface);
+  left: 0; /* 좌측 정렬로 변경 (메뉴가 오른쪽으로 펼쳐지게 하여 짤림 방지) */
+  background: #FFFFFF;
   border: var(--border-thick) solid var(--outline-color);
   border-radius: var(--radius-pixel);
   padding: 8px;
@@ -348,7 +350,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: max-content;
+  width: max-content; /* min-width 대신 명시적으로 크기 지정하여 잘림 방지 */
+  white-space: nowrap;
   animation: popIn 0.15s ease-out forwards;
   z-index: 50;
 }
@@ -411,7 +414,7 @@ button {
 }
 
 .in-game-title .title-text:nth-child(2) {
-  color: var(--knu-orange);
+  color: #FF8C00;
   font-size: 30px;
   margin-left: -3px; /* 왼쪽으로 살짝 이동 */
   text-shadow: 

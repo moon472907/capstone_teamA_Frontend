@@ -76,11 +76,8 @@ function GameScreen({ onGoBack, selectedCharacter }) {
         </h1>
       </div>
 
-      <div className="top-info">
-        <div className="turn-badge">
-          현재 턴 {turn} / 8
-        </div>
-        <div style={{ position: 'relative' }} ref={settingsRef}>
+      <div className="top-info" ref={settingsRef}>
+        <div style={{ position: 'relative' }}>
           <button className="settings-btn" title="설정" onClick={() => setShowSettings(!showSettings)}>
             ⚙️
           </button>
@@ -118,6 +115,10 @@ function GameScreen({ onGoBack, selectedCharacter }) {
         >
           {isRolling ? '🎲' : '주사위 굴리기'}
         </button>
+      </div>
+
+      <div className="turn-badge">
+        턴 {turn} / 8
       </div>
 
       <div className="players-dock">
