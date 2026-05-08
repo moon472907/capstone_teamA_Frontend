@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Star Party</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Phaser 3 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+
+  <!-- logic (game.js보다 먼저 로드되어야 함) -->
+  <script src="logic/GameManager.js"></script>
+  <script src="logic/DiceManager.js"></script>
+  <script src="logic/BoardManager.js"></script>
+  <script src="logic/PlayerManager.js"></script>
+
+  <!-- scenes -->
+  <script src="scenes/PreloadScene.js"></script>
+  <script src="scenes/MenuScene.js"></script>
+  <script src="scenes/BoardScene.js"></script>
+  <script src="scenes/MiniGameScene.js"></script>
+
+  <!-- 게임 메인 설정 -->
+  <script src="game.js"></script>
+
+</body>
+</html>

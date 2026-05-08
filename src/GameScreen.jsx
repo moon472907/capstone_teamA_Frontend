@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PhaserGame from './phaser/PhaserGame';
 
 const OTHER_PLAYERS = [
   { id: 2, name: '나래(플레이어2)', color: '#FF8C00', icon: '🕊️', gpa: 60 },
@@ -16,6 +17,10 @@ function GameScreen({ onGoBack, selectedCharacter }) {
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [showExitPopup, setShowExitPopup] = useState(false);
   const settingsRef = useRef(null);
+  
+  // Phaser 연동용 상태
+  const phaserGameRef = useRef(null);
+  const [branchOptions, setBranchOptions] = useState(null);
 
   const PLAYERS = [
     { id: 1, name: selectedCharacter?.name || '나(플레이어1)', color: '#85CDEE', icon: selectedCharacter?.icon || '🐻‍❄️', gpa: 45 },
@@ -41,18 +46,47 @@ function GameScreen({ onGoBack, selectedCharacter }) {
     };
   }, [showSettings]);
 
+  const handleGameReady = (gameInstance) => {
+    phaserGameRef.current = gameInstance;
+  };
+
+  const handleRequireBranchChoice = (opts, fromId) => {
+    // Phaser에서 갈림길 선택을 요청함
+    setBranchOptions(opts);
+  };
+
+  const handleBranchSelect = (nodeId) => {
+    setBranchOptions(null);
+    if (phaserGameRef.current) {
+      const boardScene = phaserGameRef.current.scene.getScene('BoardScene');
+      if (boardScene) boardScene.selectBranch(nodeId);
+    }
+  };
+
+  const handleMoveDone = (data) => {
+    const { isWin, nodeId } = data;
+    if (isWin) {
+      alert("게임 종료! 도착했습니다!");
+    }
+    handleTurnEnd();
+  };
+
   const rollDice = () => {
-    if (isRolling || showNotification) return;
+    if (isRolling || showNotification || branchOptions) return;
 
     setIsRolling(true);
     
-    setTimeout(() => {
-      setIsRolling(false);
-      handleTurnEnd();
-    }, 1500);
+    // Phaser 보드 씬의 주사위 굴리기 로직 직접 호출
+    if (phaserGameRef.current) {
+      const boardScene = phaserGameRef.current.scene.getScene('BoardScene');
+      if (boardScene) {
+        boardScene.startDiceRoll();
+      }
+    }
   };
 
   const handleTurnEnd = () => {
+    setIsRolling(false);
     const nextIdx = (currentPlayerIdx + 1) % 4;
     setNextPlayerName(PLAYERS[nextIdx].name);
     setShowNotification(true);
@@ -100,10 +134,12 @@ function GameScreen({ onGoBack, selectedCharacter }) {
 
       <div className="board-wrapper">
         <div className="board-area">
-          <div className="board-placeholder">
-            <span className="board-placeholder-title">전체 화면 강원대 맵 (Phaser)</span>
-            <span className="board-placeholder-desc">UI 뒤로 맵이 넓게 깔립니다</span>
-          </div>
+          <PhaserGame 
+            selectedCharacter={selectedCharacter}
+            onGameReady={handleGameReady}
+            onRequireBranchChoice={handleRequireBranchChoice}
+            onMoveDone={handleMoveDone}
+          />
         </div>
       </div>
 
@@ -158,6 +194,27 @@ function GameScreen({ onGoBack, selectedCharacter }) {
             <div className="exit-buttons">
               <button className="cancel-btn" onClick={() => setShowExitPopup(false)}>취소</button>
               <button className="confirm-btn" onClick={onGoBack}>나가기</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 갈림길 선택 UI */}
+      {branchOptions && (
+        <div className="turn-overlay">
+          <div className="branch-alert">
+            <h2>갈림길 선택!</h2>
+            <p>어느 방향으로 이동하시겠습니까?</p>
+            <div className="branch-btn-group">
+              {branchOptions.map((nodeId, idx) => (
+                <button 
+                  key={nodeId}
+                  className={`branch-btn ${idx === 1 ? 'orange' : ''}`}
+                  onClick={() => handleBranchSelect(nodeId)}
+                >
+                  {idx + 1}번 길
+                </button>
+              ))}
             </div>
           </div>
         </div>
