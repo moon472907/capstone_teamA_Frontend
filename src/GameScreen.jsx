@@ -153,10 +153,6 @@ function GameScreen({ onGoBack, selectedCharacter }) {
         </button>
       </div>
 
-      <div className="turn-badge">
-        턴 {turn} / 8
-      </div>
-
       <div className="players-dock">
         {PLAYERS.map((player, idx) => (
           <div 
@@ -175,6 +171,10 @@ function GameScreen({ onGoBack, selectedCharacter }) {
             </div>
           </div>
         ))}
+        {/* 턴 표시를 플레이어 뱃지 아래로 이동 */}
+        <div className="turn-badge">
+          턴 {turn} / 8
+        </div>
       </div>
 
       {showNotification && (

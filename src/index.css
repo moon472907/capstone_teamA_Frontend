@@ -149,10 +149,6 @@ button {
 }
 
 .turn-badge {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
   background: rgba(0, 91, 172, 0.9); /* 쨍한 블루 */
   color: #FFFFFF;
   padding: 8px 24px;
@@ -165,6 +161,10 @@ button {
   white-space: nowrap;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  margin-top: 12px;
+  align-self: flex-end; /* 우측 정렬 */
+  min-width: 140px;
+  text-align: center;
 }
 
 .board-wrapper {
@@ -213,11 +213,12 @@ button {
   margin-top: 10px;
 }
 
-/* 주사위 - 좌측 하단 */
+/* 주사위 - 중앙 하단 */
 .dice-container {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 20;
 }
 
