@@ -47,6 +47,9 @@ export default class BoardScene extends Phaser.Scene {
 
     // 스타 노드 마커 배치
     this._placeStarMarkers();
+
+    // 건물(랜드마크) 인터랙션 활성화
+    this._setupBuildingInteractions();
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -396,9 +399,186 @@ export default class BoardScene extends Phaser.Scene {
     return adj;
   }
 
+
+
+  // ─────────────────────────────────────────────────────────────
+  //  건물(랜드마크) 마우스 호버 피드백 및 클릭 이벤트 처리
+  // ─────────────────────────────────────────────────────────────
+
+  _setupBuildingInteractions() {
+    // 6개 지정 노드에 대한 상세 정보 정의 (나중에 사용자가 수정할 수 있게 최상단에 놓음)
+    const BUILDING_DATA = {
+      node41: {
+        id: 'node41',
+        label: '1',
+        name: '중앙도서관',
+        description: '강원대 학생들이 가장 많이 이용하는 대표 도서관입니다. 열람실·스터디룸·멀티미디어실 등 다양한 학습 공간을 갖추고 있으며, 시험기간에는 많은 학생들이 이용하는 공부의 중심 공간 역할을 합니다. 그룹스터디룸과 시설 예약도 가능해 팀플이나 과제 준비에도 자주 활용됩니다.',
+        image: '/assets/buildings/central_library.jpg'
+      },
+      node22: {
+        id: 'node22',
+        label: '2',
+        name: '백령스포츠센터',
+        description: '헬스장·수영장 등 다양한 체육시설을 갖춘 대표 스포츠 공간입니다. 온라인 예약 시스템을 통해 체육시설과 강좌를 편리하게 이용할 수 있어 학생들의 활용도가 높은 편입니다.',
+        image: '/assets/buildings/sports_center.png'
+      },
+      node23: {
+        id: 'node23',
+        label: '3',
+        name: 'KNU 미래도서관',
+        description: '최신식 학습 공간과 다양한 편의시설을 갖춘 대표 도서관입니다. 스터디룸과 회의실 예약이 가능하며, 플레이스테이션 이용 공간 등 학생 참여형 시설도 운영되어 공부와 휴식을 함께 즐길 수 있습니다.',
+        image: '/assets/buildings/future_library.png'
+      },
+      node39: {
+        id: 'node39',
+        label: '4',
+        name: '미래광장',
+        description: '학생들이 가장 많이 모이는 강원대 대표 광장입니다. 축제 부스, 동아리 행사, 버스킹 등 다양한 학생 활동이 열리며 중앙도서관 앞에 위치해 있어 캠퍼스의 중심 공간 역할을 합니다.',
+        image: '/assets/buildings/future_square.png'
+      },
+      node36: {
+        id: 'node36',
+        label: '5',
+        name: '60주년기념관',
+        description: '대형 강의실과 국제회의실 등을 갖춘 강원대 대표 강의동 중 하나입니다. 다양한 수업과 행사, 특강이 자주 진행되며 계단식 강의실과 회의 공간 예약 시스템도 운영되어 학술행사나 학생 활동 공간으로 활용되고 있습니다.',
+        image: '/assets/buildings/60th_anniversary.jpg'
+      },
+      node37: {
+        id: 'node37',
+        label: '6',
+        name: '함인섭광장 & 대운동장',
+        description: '학생들이 가장 많이 모이고 다양한 행사가 열리는 강원대 대표 야외공간입니다. 중앙동아리 홍보제, 축제 등 학생 참여 행사가 자주 진행되며 넓은 운동장과 광장이 함께 어우러져 강원대 캠퍼스 분위기를 가장 잘 느낄 수 있는 장소 중 하나입니다. 함인섭광장은 강원대학교 초대 학장인 함인섭 박사를 기념해 조성된 공간이기도 합니다.',
+        image: '/assets/buildings/playground.jpg'
+      }
+    };
+
+    // Tiled 에디터 포인트가 배경 이미지의 실제 타일 정중앙과 살짝 어긋난 경우 미세 보정하는 테이블
+    const OFFSET_CORRECTIONS = {
+      node23: { dx: 19, dy: 3 }, // 3번 노드(node23)의 호버 서클 및 텍스트 위치를 완벽한 정중앙으로 미세 보정 (오른쪽 19px, 아래쪽 3px 미세 이동)
+      // 나중에 다른 노드도 어긋나 보이면 여기에 { dx, dy } 한 줄만 추가해주시면 됩니다!
+    };
+
+    const sc = this.boardManager.mapScale;
+    
+    // 1. 마우스 클릭 히트 영역
+    const hitR = Math.max(20, Math.round(28 * sc / 0.5)); 
+    
+    // 2. 시각적인 호버 링 크기 (14px 수준으로 고정, 절대 수정 금지)
+    const visualR = Math.max(10, Math.round(14 * sc / 0.5));
+
+    Object.keys(BUILDING_DATA).forEach(nodeId => {
+      const node = this.boardManager.getNodeById(nodeId);
+      if (!node) return;
+
+      const data = BUILDING_DATA[nodeId];
+      const correction = OFFSET_CORRECTIONS[nodeId] || { dx: 0, dy: 0 };
+      
+      // 보정 좌표 계산 (스케일 보정 포함)
+      const adjX = node.x + (correction.dx * sc);
+      const adjY = node.y + (correction.dy * sc);
+
+      // 호버 시 나타날 글로우 그래픽스 생성 (기본은 투명)
+      const glow = this.add.graphics().setDepth(198).setAlpha(0);
+      
+      // 얇고 깔끔한 네온 청록색 라인 및 은은한 반투명 채우기
+      glow.lineStyle(2, 0x00ffcc, 1);
+      glow.strokeCircle(0, 0, visualR);
+      glow.fillStyle(0x00ffcc, 0.08);
+      glow.fillCircle(0, 0, visualR - 1);
+      glow.setPosition(adjX, adjY);
+
+      // 번호 라벨 생성 (기본 숨김, 심플한 작은 크기)
+      const labelText = this.add.text(adjX, adjY - visualR - 12, data.label, {
+        fontSize: `${Math.max(14, Math.round(18 * sc / 0.5))}px`,
+        fontFamily: 'DungGeunMo',
+        color: '#00ffcc',
+        stroke: '#000000',
+        strokeThickness: 3.5,
+      }).setOrigin(0.5).setDepth(200).setAlpha(0);
+
+      // 보이지 않는 인터랙티브 히트 영역 생성
+      const hitZone = this.add.circle(adjX, adjY, hitR, 0x000000, 0)
+        .setDepth(199)
+        .setInteractive({ useHandCursor: true });
+
+      let pulseTween = null;
+
+      // 1. 마우스 호버 IN 피드백 (글로우 + 숫자 라벨 등장)
+      hitZone.on('pointerover', () => {
+        if (pulseTween) pulseTween.stop();
+        this.tweens.add({
+          targets: glow,
+          alpha: 1,
+          duration: 150,
+          ease: 'Sine.easeOut'
+        });
+        
+        this.tweens.add({
+          targets: labelText,
+          alpha: 1,
+          duration: 150,
+          ease: 'Sine.easeOut'
+        });
+
+        // 펄스 효과
+        pulseTween = this.tweens.add({
+          targets: glow,
+          scaleX: 1.12,
+          scaleY: 1.12,
+          alpha: 0.9,
+          duration: 550,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut'
+        });
+      });
+
+      // 2. 마우스 호버 OUT (글로우 + 숫자 라벨 퇴장)
+      hitZone.on('pointerout', () => {
+        if (pulseTween) pulseTween.stop();
+        this.tweens.add({
+          targets: glow,
+          alpha: 0,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 180,
+          ease: 'Sine.easeIn'
+        });
+
+        this.tweens.add({
+          targets: labelText,
+          alpha: 0,
+          duration: 180,
+          ease: 'Sine.easeIn'
+        });
+      });
+
+      // 3. 마우스 클릭 피드백 및 React 이벤트 방출
+      hitZone.on('pointerup', () => {
+        this.tweens.add({
+          targets: glow,
+          scaleX: 1.25,
+          scaleY: 1.25,
+          alpha: 0,
+          duration: 100,
+          yoyo: true,
+          ease: 'Quad.easeOut',
+          onComplete: () => {
+            glow.setScale(1);
+            glow.setAlpha(0);
+          }
+        });
+
+        // React로 건물 정보 전송
+        this.game.events.emit('landmarkClicked', data);
+      });
+    });
+  }
+
   // ─────────────────────────────────────────────────────────────
   //  스타 노드: 맵 마커 배치 + 픽업 애니메이션
   // ─────────────────────────────────────────────────────────────
+
 
   _placeStarMarkers() {
     const STAR_IDS = ['node4','node11','node19','node23','node28','node30','node42','node52'];

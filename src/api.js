@@ -25,8 +25,26 @@ async function request(method, path, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.message || '요청 실패');
+  // 1. 응답 바디를 안전하게 텍스트로 먼저 받아옴
+  const text = await res.text();
+  let json = {};
+  
+  try {
+    if (text) {
+      json = JSON.parse(text);
+    }
+  } catch (err) {
+    // 백엔드 오류 등으로 HTML(502 Bad Gateway 등)이나 빈 응답이 돌아온 경우 예외 처리
+    if (!res.ok) {
+      throw new Error(`서버 요청 실패 (HTTP 상태 코드: ${res.status})`);
+    }
+    throw new Error('서버 응답 형식이 올바르지 않습니다.');
+  }
+
+  if (!res.ok) {
+    throw new Error(json.message || `요청 실패 (HTTP 상태 코드: ${res.status})`);
+  }
+  
   return json.content;
 }
 

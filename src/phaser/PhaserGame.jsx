@@ -5,7 +5,7 @@ import PreloadScene from './scenes/PreloadScene.js';
 import MenuScene from './scenes/MenuScene.js';
 import BoardScene from './scenes/BoardScene.js';
 
-export default function PhaserGame({ onGameReady }) {
+export default function PhaserGame({ onGameReady, onLandmarkClick }) {
   const gameRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -31,15 +31,25 @@ export default function PhaserGame({ onGameReady }) {
       game.events.once('boardReady', () => {
         onGameReady?.(game);
       });
+
+      // 랜드마크 클릭 이벤트 브릿징
+      const landmarkListener = (data) => {
+        onLandmarkClick?.(data);
+      };
+      game.events.on('landmarkClicked', landmarkListener);
+      game._landmarkListener = landmarkListener;
     }
 
     return () => {
       if (gameRef.current) {
+        if (gameRef.current._landmarkListener) {
+          gameRef.current.events.off('landmarkClicked', gameRef.current._landmarkListener);
+        }
         gameRef.current.destroy(true);
         gameRef.current = null;
       }
     };
-  }, []);
+  }, [onGameReady, onLandmarkClick]);
 
   return <div ref={containerRef} id="phaser-game-container" />;
 }

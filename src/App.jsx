@@ -16,7 +16,7 @@ export const CHARACTERS = [
 ];
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('loading');
+  const [currentScreen, setCurrentScreen] = useState('game'); // 개발용: 'loading'으로 원복
   const [selectedCharacter, setSelectedCharacter] = useState(CHARACTERS[0]);
   const [user, setUser] = useState(null);
   const [currentGameId, setCurrentGameId] = useState(null);
@@ -27,18 +27,18 @@ function App() {
   const [isSoundOn, setIsSoundOn] = useState(true);
   const audioRef = useRef(null);
 
-  // 로그인 상태 확인
-  useEffect(() => {
-    api.me()
-      .then((userData) => {
-        setUser(userData);
-        setAccessToken(getToken());
-        setCurrentScreen('menu');
-      })
-      .catch(() => {
-        setCurrentScreen('login');
-      });
-  }, []);
+  // 로그인 상태 확인 (개발용: 주석 해제하여 원복)
+  // useEffect(() => {
+  //   api.me()
+  //     .then((userData) => {
+  //       setUser(userData);
+  //       setAccessToken(getToken());
+  //       setCurrentScreen('menu');
+  //     })
+  //     .catch(() => {
+  //       setCurrentScreen('login');
+  //     });
+  // }, []);
 
   // BGM 재생/중지
   useEffect(() => {
@@ -92,7 +92,11 @@ function App() {
   return (
     <>
       {currentScreen === 'login' && (
-        <LoginScreen onLogin={handleLogin} />
+        <LoginScreen
+          onLogin={handleLogin}
+          isSoundOn={isSoundOn}
+          onToggleSound={() => setIsSoundOn(v => !v)}
+        />
       )}
       {currentScreen === 'menu' && (
         <MainMenu

@@ -648,3 +648,239 @@
   cursor: not-allowed;
   opacity: 0.8;
 }
+
+/* ============================================
+   반응형 — 창 줄임 대응
+   ============================================ */
+
+/* 태블릿 / 좁은 창 (900px 이하) */
+@media (max-width: 900px) {
+  .lobby-container {
+    padding: 70px 16px 16px 16px;
+    overflow-y: auto;
+  }
+
+  /* 방 내부: 가로 → 세로 배치 전환 */
+  .waiting-room-layout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  /* 캐릭터 선택 패널 가로 전체로 확장 */
+  .character-picker {
+    width: 100%;
+    flex-shrink: 1;
+  }
+
+  .picker-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .picker-preview {
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  .preview-icon {
+    font-size: 36px;
+  }
+
+  /* 방 목록 헤더 줄바꿈 */
+  .browser-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .browser-actions {
+    flex-wrap: wrap;
+  }
+
+  .search-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* 방 카드 그리드 단일 열 */
+  .room-list-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* 대기실 헤더 줄바꿈 */
+  .waiting-room-title-info {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .waiting-room-title-info h2 {
+    font-size: 24px;
+  }
+
+  /* 플레이어 슬롯 축소 */
+  .slot-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 36px;
+  }
+
+  .slot-name {
+    font-size: 16px;
+  }
+
+  .slot-ready-status,
+  .slot-waiting-status {
+    padding: 6px 16px;
+    font-size: 14px;
+  }
+
+  /* 준비 버튼 축소 */
+  .btn-ready {
+    padding: 12px 40px;
+    font-size: 20px;
+  }
+
+  /* 모달 축소 */
+  .create-modal {
+    min-width: auto;
+    width: calc(100vw - 32px);
+    max-width: 480px;
+    padding: 24px;
+  }
+
+  /* 상단 버튼 축소 */
+  .menu-exit-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .top-right-actions {
+    right: 16px;
+    top: 16px;
+  }
+}
+
+/* 모바일 / 매우 좁은 창 (600px 이하) */
+@media (max-width: 600px) {
+  .lobby-container {
+    padding: 60px 8px 8px 8px;
+  }
+
+  /* 방 내부 패딩 축소 */
+  .waiting-room {
+    padding: 12px;
+  }
+
+  /* 플레이어 그리드 단일 열 */
+  .player-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 8px;
+  }
+
+  .player-slot {
+    padding: 12px;
+  }
+
+  .player-slot.occupied {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .slot-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+  }
+
+  .slot-info {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .slot-name {
+    font-size: 14px;
+  }
+
+  .slot-ready-status,
+  .slot-waiting-status {
+    padding: 4px 12px;
+    font-size: 12px;
+  }
+
+  .slot-master-badge {
+    top: -8px;
+    font-size: 12px;
+    padding: 2px 8px;
+  }
+
+  .player-slot.empty .empty-text {
+    font-size: 14px;
+  }
+
+  /* 캐릭터 선택 그리드 */
+  .picker-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .picker-item-icon {
+    font-size: 22px;
+  }
+
+  .picker-item-name {
+    font-size: 10px;
+  }
+
+  .picker-item {
+    padding: 6px 2px;
+  }
+
+  /* 준비 버튼 */
+  .btn-ready {
+    padding: 10px 24px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  /* 방 목록 */
+  .server-browser {
+    padding: 16px;
+  }
+
+  .browser-header h2 {
+    font-size: 22px;
+  }
+
+  .btn-create-room {
+    width: 100%;
+    font-size: 14px;
+    padding: 0 16px;
+  }
+
+  .text-icon-btn {
+    font-size: 14px;
+    padding: 0 12px;
+  }
+
+  /* 모달 */
+  .create-modal {
+    width: calc(100vw - 16px);
+    padding: 16px;
+  }
+
+  .create-modal h2 {
+    font-size: 20px;
+  }
+
+  .modal-input {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .modal-cancel-btn,
+  .modal-confirm-btn {
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+}
+

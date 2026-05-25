@@ -37,26 +37,15 @@ function MainMenu({ onStartGame, onLogout, user, isSoundOn, onToggleSound }) {
         />
       ))}
 
-      {/* 로그아웃 */}
-      <div
-        style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-      >
-        {user && <span style={{ color: 'white', fontSize: '0.9rem', opacity: 0.8 }}>{user.name}</span>}
-        <button
-          onClick={onLogout}
-          style={{
-            background: 'rgba(255,255,255,0.15)',
-            border: '1px solid rgba(255,255,255,0.3)',
-            borderRadius: '8px',
-            color: 'white',
-            padding: '0.4rem 0.8rem',
-            cursor: 'pointer',
-            fontSize: '0.85rem',
-          }}
-        >
-          로그아웃
-        </button>
-      </div>
+      {/* 로그아웃 및 사용자 프로필 배지 */}
+      {user && (
+        <div className="user-profile-badge">
+          <span className="profile-name">{user.name}</span>
+          <button className="btn-logout" onClick={onLogout}>
+            로그아웃
+          </button>
+        </div>
+      )}
 
       {/* 사운드 토글 */}
       <div

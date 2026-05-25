@@ -86,6 +86,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
   const [showStarNotif, setShowStarNotif] = useState(false);
 
   // ── Phaser 브릿지 ──────────────────────────────────────────
+  const [selectedBuilding, setSelectedBuilding] = useState(null); // 건물 상세 정보 팝업용 상태
   const phaserGameRef = useRef(null);
   const wsClientRef   = useRef(null);
   const [sceneReady, setSceneReady] = useState(false);
@@ -422,6 +423,12 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     if (!gameId) doLocalTurnChange();
   };
 
+  const handleLandmarkClick = useCallback((buildingData) => {
+    setSelectedBuilding(buildingData);
+  }, []);
+
+
+
   const handleGameReady = (gameInstance) => {
     phaserGameRef.current = gameInstance;
     setSceneReady(true);
@@ -471,7 +478,8 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         <div className="board-area">
           <PhaserGame
             selectedCharacter={selectedCharacter}
-            onGameReady={handleGameReady}
+            onBoardReady={handleGameReady}
+            onLandmarkClick={handleLandmarkClick}
             onRequireBranchChoice={handleRequireBranchChoice}
             onMoveDone={handleMoveDone}
           />
@@ -739,6 +747,37 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
             </div>
             <div className="exit-buttons">
               <button className="confirm-btn" onClick={onGoBack}>메인으로</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 랜드마크 건물 상세 정보 레트로 팝업 모달 */}
+      {selectedBuilding && (
+        <div className="building-modal-overlay" onClick={() => setSelectedBuilding(null)}>
+          <div className="building-modal-content pixel-chunky-border" onClick={(e) => e.stopPropagation()}>
+            {/* 닫기 버튼 */}
+            <button className="building-modal-close" onClick={() => setSelectedBuilding(null)}>
+              ×
+            </button>
+            
+            {/* 건물 이미지 */}
+            <div className="building-modal-image-container">
+              <img 
+                src={selectedBuilding.image} 
+                alt={selectedBuilding.name} 
+                className="building-modal-image"
+                onError={(e) => {
+                  e.target.src = 'https://placehold.co/300x200/2d3748/00ffcc?text=KNU+Landmark';
+                }}
+              />
+            </div>
+
+            {/* 건물 정보 */}
+            <div className="building-modal-info">
+              <h2 className="building-modal-title">{selectedBuilding.name}</h2>
+              <div className="building-modal-divider"></div>
+              <p className="building-modal-description">{selectedBuilding.description}</p>
             </div>
           </div>
         </div>
