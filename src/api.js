@@ -9,13 +9,17 @@ function setToken(token) {
   else localStorage.removeItem(TOKEN_KEY);
 }
 
+// 개발(Vite 프록시): 빈 문자열 → 상대경로 사용
+// 운영(Vercel): VITE_API_URL = https://api.everyknu.cloud
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 async function request(method, path, body) {
   const token = getToken();
   const headers = {};
   if (body) headers['Content-Type'] = 'application/json';
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(path, {
+  const res = await fetch(API_BASE + path, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,

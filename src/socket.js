@@ -16,7 +16,7 @@ export function createGameSocket(gameId, handlers = {}) {
   const token = getToken();
 
   const client = new Client({
-    webSocketFactory: () => new SockJS('/ws'),
+    webSocketFactory: () => new SockJS(import.meta.env.VITE_WS_URL || '/ws'),
     connectHeaders: token ? { Authorization: `Bearer ${token}` } : {},
     reconnectDelay: 3000,
     heartbeatIncoming: 10000,
