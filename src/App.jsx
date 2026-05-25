@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './index.css';
 import MainMenu from './MainMenu';
 import Lobby from './Lobby';
@@ -20,7 +20,14 @@ function App() {
   const [selectedCharacter, setSelectedCharacter] = useState(CHARACTERS[0]);
   const [user, setUser] = useState(null);
   const [currentGameId, setCurrentGameId] = useState(null);
+  const [playerId, setPlayerId] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
 
+  // BGM 통합 관리
+  const [isSoundOn, setIsSoundOn] = useState(true);
+  const audioRef = useRef(null);
+
+  // 로그인 상태 확인
   useEffect(() => {
     api.me()
       .then((userData) => {
@@ -32,9 +39,36 @@ function App() {
       });
   }, []);
 
+  // BGM 재생/중지
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/assets/audio/Pou music ost - Food Drop.mp3');
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.5;
+    }
+    if (isSoundOn) {
+      audioRef.current.play().catch(() => {});
+    } else {
+      audioRef.current.pause();
+    }
+  }, [isSoundOn]);
+
+  // 화면 전환 시 BGM 재개 시도 (브라우저 autoplay 정책 대응)
+  useEffect(() => {
+    if (isSoundOn && audioRef.current) {
+      audioRef.current.play().catch(() => {});
+    }
+  }, [currentScreen]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleLogin = (userData) => {
     setUser(userData);
     setCurrentScreen('menu');
+  };
+
+  const handleJoinRoom = ({ gameId: gId, playerId: pId } = {}) => {
+    if (gId) setCurrentGameId(gId);
+    if (pId) setPlayerId(pId);
+    setCurrentScreen('game');
   };
 
   if (currentScreen === 'loading') {
@@ -67,25 +101,30 @@ function App() {
             setCurrentScreen('login');
           }}
           user={user}
+          isSoundOn={isSoundOn}
+          onToggleSound={() => setIsSoundOn(v => !v)}
         />
       )}
       {currentScreen === 'lobby' && (
         <Lobby
-          onJoinRoom={(gameId) => {
-            setCurrentGameId(gameId);
-            setCurrentScreen('game');
-          }}
+          onJoinRoom={handleJoinRoom}
           onGoBack={() => setCurrentScreen('menu')}
           selectedCharacter={selectedCharacter}
           setSelectedCharacter={setSelectedCharacter}
           user={user}
+          onTokenReceived={setAccessToken}
         />
       )}
       {currentScreen === 'game' && (
         <GameScreen
           onGoBack={() => setCurrentScreen('menu')}
+          selectedCharacter={selectedCharacter}
           gameId={currentGameId}
+          playerId={playerId}
           user={user}
+          accessToken={accessToken}
+          isSoundOn={isSoundOn}
+          onToggleSound={() => setIsSoundOn(v => !v)}
         />
       )}
     </>

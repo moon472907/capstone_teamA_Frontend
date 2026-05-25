@@ -32,6 +32,12 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.spritesheet("player_run",  "/assets/images/characters/player1_run.png",
       { frameWidth: 112, frameHeight: 96 });
 
+    // Bus image for 두리버스 animation
+    this.load.image("bus", "/assets/images/bus'/bus.png");
+
+    // Star image for star tile
+    this.load.image("star", "/assets/images/star/star.jpg");
+
     // Procedural bg texture (used by MenuScene)
     this.createBgTexture();
   }
