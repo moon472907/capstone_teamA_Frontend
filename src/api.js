@@ -51,6 +51,8 @@ export const api = {
   // 게임
   listGames: () => request('GET', '/api/v1/games'),
 
+  getGame: (gameId) => request('GET', `/api/v1/games/${gameId}`),
+
   createGame: (payload) => request('POST', '/api/v1/games', payload),
 
   joinGame: (gameId, payload) =>

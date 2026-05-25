@@ -4,7 +4,7 @@ import MainMenu from './MainMenu';
 import Lobby from './Lobby';
 import GameScreen from './GameScreen';
 import LoginScreen from './LoginScreen';
-import { api } from './api';
+import { api, getToken } from './api';
 
 export const CHARACTERS = [
   { id: 'gomduri', name: '곰두리', icon: '🐻‍❄️', desc: '강원대 대표 마스코트' },
@@ -32,6 +32,7 @@ function App() {
     api.me()
       .then((userData) => {
         setUser(userData);
+        setAccessToken(getToken());
         setCurrentScreen('menu');
       })
       .catch(() => {
@@ -62,6 +63,7 @@ function App() {
 
   const handleLogin = (userData) => {
     setUser(userData);
+    setAccessToken(getToken());
     setCurrentScreen('menu');
   };
 
@@ -112,7 +114,6 @@ function App() {
           selectedCharacter={selectedCharacter}
           setSelectedCharacter={setSelectedCharacter}
           user={user}
-          onTokenReceived={setAccessToken}
         />
       )}
       {currentScreen === 'game' && (

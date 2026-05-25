@@ -1,5 +1,6 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { getToken } from '../api';
 
 const BASE_URL = (import.meta.env.VITE_API_URL || '').trim();
 
@@ -15,11 +16,12 @@ const BASE_URL = (import.meta.env.VITE_API_URL || '').trim();
  * @returns {Client} - client.deactivate() 로 연결 해제
  */
 export function createGameSocket({ gameId, accessToken, onEvent, onConnected, onError }) {
+  const token = accessToken || getToken();
   const client = new Client({
     webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
 
     connectHeaders: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${token}`
     },
 
     onConnect: () => {

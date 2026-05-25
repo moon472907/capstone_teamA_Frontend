@@ -1,10 +1,18 @@
 import axios from 'axios';
+import { getToken } from '../api';
 
 // 공백이 끼어도 안전하도록 trim. 미설정 시 상대경로('') → dev는 Vite 프록시, 배포는 Vercel rewrite 사용
 const BASE_URL = (import.meta.env.VITE_API_URL || '').trim();
 
 // 모든 요청에 쿠키 포함 (accessToken 쿠키 자동 전송)
 axios.defaults.withCredentials = true;
+
+// 로그인 시 저장한 accessToken을 Authorization 헤더로 첨부 (백엔드는 Bearer 우선 인식)
+axios.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
 // ── tileId ↔ Phaser nodeId 변환 ──────────────────────────────
 // 서버: tileId (정수) ↔ Phaser: "node14" 형태 문자열

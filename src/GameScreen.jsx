@@ -94,11 +94,17 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     ...DUMMY_PLAYERS.map(p => ({ playerId: p.id, nickname: p.name, icon: p.icon, coins: 0, gpa: 0, color: p.color }))
   ];
 
-  const isMyTurn = !gameId || (displayPlayers[currentPlayerIdx]?.playerId === playerId);
+  // 서버 플레이어 목록에서 본인 playerId 식별 (로그인 memberId == user.id 매칭). 실패 시 prop 폴백
+  const myPlayerId = (players?.find(p => p.memberId === user?.id)?.playerId) ?? playerId;
+  const isMyTurn = !gameId || (displayPlayers[currentPlayerIdx]?.playerId === myPlayerId);
 
-  // ── WebSocket 연결 (gameId 있을 때만) ──────────────────────
+  // WS 콜백에서 최신 myPlayerId를 참조하기 위한 ref (stale closure 방지)
+  const myPlayerIdRef = useRef(myPlayerId);
+  myPlayerIdRef.current = myPlayerId;
+
+  // ── WebSocket 연결 (gameId 있을 때만; 토큰은 createGameSocket이 localStorage 폴백) ──
   useEffect(() => {
-    if (!gameId || !accessToken) return;
+    if (!gameId) return;
 
     wsClientRef.current = createGameSocket({
       gameId,
@@ -171,7 +177,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
 
       case WS_EVENTS.CARD_TARGET_REQUIRED:
         // 공격 카드를 뽑은 본인만 대상 선택 UI 표시
-        if (payload.playerId === playerId) {
+        if (payload.playerId === myPlayerIdRef.current) {
           setPendingAttackCard({ cardKey: payload.cardKey, title: payload.title });
           setCardTargetOptions(payload.targetOptions);
         }
@@ -179,7 +185,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
 
       case WS_EVENTS.DEFENSE_PROMPT:
         // 피격 대상 본인만 방어 사용 여부 UI 표시
-        if (payload.targetPlayerId === playerId) {
+        if (payload.targetPlayerId === myPlayerIdRef.current) {
           setDefensePrompt({
             attackerPlayerId: payload.attackerPlayerId,
             title: payload.title,
@@ -191,7 +197,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
 
       case WS_EVENTS.BUS_RIDE_REQUIRED:
         // 현재 플레이어 본인만 정류장 선택 UI 표시
-        if (payload.playerId === playerId) {
+        if (payload.playerId === myPlayerIdRef.current) {
           setServerBusOptions(payload.busOptions);
         }
         break;
