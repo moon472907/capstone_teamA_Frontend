@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './MainMenu.css';
 
-function MainMenu({ onStartGame }) {
+function MainMenu({ onStartGame, onLogout, user }) {
   const [isSoundOn, setIsSoundOn] = useState(true);
 
   // 반짝이는 별 데이터 생성
@@ -37,6 +37,27 @@ function MainMenu({ onStartGame }) {
           }}
         />
       ))}
+
+      {/* 로그아웃 */}
+      <div
+        style={{ position: 'absolute', top: '1rem', left: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+      >
+        {user && <span style={{ color: 'white', fontSize: '0.9rem', opacity: 0.8 }}>{user.name}</span>}
+        <button
+          onClick={onLogout}
+          style={{
+            background: 'rgba(255,255,255,0.15)',
+            border: '1px solid rgba(255,255,255,0.3)',
+            borderRadius: '8px',
+            color: 'white',
+            padding: '0.4rem 0.8rem',
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+          }}
+        >
+          로그아웃
+        </button>
+      </div>
 
       {/* 사운드 토글 */}
       <div

@@ -1,175 +1,142 @@
-import Phaser from 'phaser';
-const SPRITE_SCALE = 0.45; // 112×96 → ~50×43 px on screen
+const SPRITE_SCALE = 0.45;
+
+// 같은 타일에 여러 말이 겹치지 않도록 플레이어별 픽셀 오프셋
+const OFFSETS = [
+  { x: -16, y: -6 },
+  { x: 16, y: -6 },
+  { x: -16, y: 10 },
+  { x: 16, y: 10 },
+];
+
+const COLORS = ['#85CDEE', '#FF8C00', '#005BAC', '#48BB78'];
 
 export default class PlayerManager {
-  constructor(scene, gameManager, boardManager) {
+  constructor(scene, boardManager) {
     this.scene = scene;
-    this.gameManager = gameManager;
     this.boardManager = boardManager;
-    this.playerSprites = [];
+    this.pawns = {}; // playerId -> { sprite, shadow, label, nodeName, offset }
+    this._ensureAnims();
   }
 
-  createPlayers() {
-    // Register animations (guard against duplicate registration on scene restart)
-    if (!this.scene.anims.exists("player_idle")) {
+  _ensureAnims() {
+    if (!this.scene.anims.exists('player_idle')) {
       this.scene.anims.create({
-        key: "player_idle",
-        frames: this.scene.anims.generateFrameNumbers("player_idle", { start: 0, end: 8 }),
+        key: 'player_idle',
+        frames: this.scene.anims.generateFrameNumbers('player_idle', { start: 0, end: 8 }),
         frameRate: 8,
-        repeat: -1
+        repeat: -1,
       });
     }
-    if (!this.scene.anims.exists("player_run")) {
+    if (!this.scene.anims.exists('player_run')) {
       this.scene.anims.create({
-        key: "player_run",
-        frames: this.scene.anims.generateFrameNumbers("player_run", { start: 0, end: 8 }),
+        key: 'player_run',
+        frames: this.scene.anims.generateFrameNumbers('player_run', { start: 0, end: 8 }),
         frameRate: 12,
-        repeat: -1
+        repeat: -1,
       });
     }
+  }
 
-    const startNode = this.boardManager.getNodeById("node1");
-    if (!startNode) return;
+  createPlayer(playerId, nodeName, name, index) {
+    const node = this.boardManager.getNodeById(nodeName);
+    if (!node) {
+      console.warn('createPlayer: 노드 없음', nodeName);
+      return;
+    }
+    const off = OFFSETS[index % OFFSETS.length];
+    const x = node.x + off.x;
+    const y = node.y + off.y;
 
-    const sx = startNode.x, sy = startNode.y;
-
-    // Shadow ellipse beneath the character
     const shadow = this.scene.add.graphics();
     shadow.fillStyle(0x000000, 0.32);
-    shadow.fillEllipse(0, 0, 38, 12);
-    shadow.setPosition(sx, sy + 8).setDepth(194);
+    shadow.fillEllipse(0, 0, 34, 11);
+    shadow.setPosition(x, y + 8).setDepth(194);
 
-    // Character sprite
-    // Origin (0.5, 0.85): character's feet area sits at the node position
-    const sprite = this.scene.add.sprite(sx, sy, "player_idle")
+    const sprite = this.scene.add.sprite(x, y, 'player_idle')
       .setScale(SPRITE_SCALE)
       .setOrigin(0.5, 0.85)
       .setDepth(196);
-    sprite.play("player_idle");
+    sprite.play('player_idle');
 
-    this.playerSprites.push({ sprite, shadow });
+    const label = this.scene.add.text(x, y - 46, name, {
+      fontSize: '13px',
+      fontFamily: 'Arial',
+      color: COLORS[index % COLORS.length],
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0.5).setDepth(197);
+
+    this.pawns[playerId] = { sprite, shadow, label, nodeName, offset: off };
   }
 
-  // ── Normal hop movement ──────────────────────────────────────
-  _animateMove(si, tx, ty, onComplete) {
-    const s = this.playerSprites[si];
-    s.sprite.play("player_run");
+  placePlayer(playerId, nodeName) {
+    const pawn = this.pawns[playerId];
+    const node = this.boardManager.getNodeById(nodeName);
+    if (!pawn || !node) return;
+    const x = node.x + pawn.offset.x;
+    const y = node.y + pawn.offset.y;
+    pawn.sprite.setPosition(x, y);
+    pawn.shadow.setPosition(x, y + 8);
+    pawn.label.setPosition(x, y - 46);
+    pawn.nodeName = nodeName;
+  }
 
-    // Arc jump to target
+  /** node 이름 배열을 따라 순차 hop 애니메이션. */
+  animatePath(playerId, pathNodeNames, onComplete) {
+    const pawn = this.pawns[playerId];
+    if (!pawn || !pathNodeNames || pathNodeNames.length === 0) {
+      onComplete?.();
+      return;
+    }
+
+    let i = 0;
+    const step = () => {
+      if (i >= pathNodeNames.length) {
+        pawn.sprite.play('player_idle');
+        onComplete?.();
+        return;
+      }
+      const node = this.boardManager.getNodeById(pathNodeNames[i]);
+      i++;
+      if (!node) { step(); return; }
+      const tx = node.x + pawn.offset.x;
+      const ty = node.y + pawn.offset.y;
+      this._hop(pawn, tx, ty, () => {
+        pawn.nodeName = pathNodeNames[i - 1];
+        this.scene.time.delayedCall(70, step);
+      });
+    };
+    step();
+  }
+
+  _hop(pawn, tx, ty, onComplete) {
+    pawn.sprite.play('player_run');
     this.scene.tweens.add({
-      targets: s.sprite,
-      x: tx, y: ty - 28,
-      duration: 160,
-      ease: "Sine.easeOut",
+      targets: pawn.sprite,
+      x: tx, y: ty - 26,
+      duration: 150,
+      ease: 'Sine.easeOut',
       onComplete: () => {
         this.scene.tweens.add({
-          targets: s.sprite,
+          targets: pawn.sprite,
           y: ty,
-          duration: 130,
-          ease: "Bounce.easeOut",
-          onComplete: () => {
-            s.sprite.play("player_idle");
-            if (onComplete) onComplete();
-          }
+          duration: 120,
+          ease: 'Bounce.easeOut',
+          onComplete: () => onComplete?.(),
         });
-      }
+      },
     });
-
-    // Shadow follows smoothly
     this.scene.tweens.add({
-      targets: s.shadow,
+      targets: pawn.label,
+      x: tx, y: ty - 46,
+      duration: 270,
+      ease: 'Sine.easeInOut',
+    });
+    this.scene.tweens.add({
+      targets: pawn.shadow,
       x: tx, y: ty + 8,
-      duration: 290,
-      ease: "Sine.easeInOut"
+      duration: 270,
+      ease: 'Sine.easeInOut',
     });
-  }
-
-  // ── Teleport: shrink-rise → snap → fall-grow  (rules 7 & 8) ─
-  _animateTeleport(si, tx, ty, onComplete) {
-    const s = this.playerSprites[si];
-    s.sprite.play("player_run");
-
-    // Phase 1 — rise, shrink, fade out
-    this.scene.tweens.add({
-      targets: s.sprite,
-      y: s.sprite.y - 110,
-      scaleX: 0, scaleY: 0,
-      alpha: 0,
-      duration: 520,
-      ease: "Sine.easeIn",
-      onComplete: () => {
-        // Snap to above destination (invisible)
-        s.sprite.setPosition(tx, ty - 90).setScale(0).setAlpha(0);
-        s.shadow.setPosition(tx, ty + 8).setAlpha(0);
-
-        // Phase 2 — fall, grow, fade in
-        this.scene.tweens.add({
-          targets: s.sprite,
-          y: ty,
-          scaleX: SPRITE_SCALE,
-          scaleY: SPRITE_SCALE,
-          alpha: 1,
-          duration: 640,
-          ease: "Bounce.easeOut",
-          onComplete: () => {
-            s.sprite.play("player_idle");
-            if (onComplete) onComplete();
-          }
-        });
-        this.scene.tweens.add({
-          targets: s.shadow,
-          alpha: 1,
-          duration: 400
-        });
-      }
-    });
-
-    // Shadow fades out independently
-    this.scene.tweens.add({
-      targets: s.shadow,
-      alpha: 0,
-      duration: 320
-    });
-  }
-
-  // ── Main movement controller ─────────────────────────────────
-  movePlayer(playerIndex, steps, onBranchChoice, onFinish) {
-    const player = this.gameManager.players[playerIndex];
-    let stepsLeft = steps;
-
-    const doMove = (targetId, useTeleport) => {
-      const target = this.boardManager.getNodeById(targetId);
-      if (!target) { onFinish(false); return; }
-
-      const afterLand = () => {
-        player.currentNodeId = targetId;
-        stepsLeft--;
-        if (target.status === "finish") { onFinish(true); return; }
-        this.scene.time.delayedCall(80, moveStep);
-      };
-
-      useTeleport
-        ? this._animateTeleport(playerIndex, target.x, target.y, afterLand)
-        : this._animateMove(playerIndex, target.x, target.y, afterLand);
-    };
-
-    const moveStep = () => {
-      if (stepsLeft <= 0) { onFinish(false); return; }
-
-      const node = this.boardManager.getNodeById(player.currentNodeId);
-      if (!node || node.next.length === 0) { onFinish(false); return; }
-
-      const isTeleport = (player.currentNodeId === "node38" || player.currentNodeId === "node40");
-
-      if (isTeleport) {
-        doMove(node.next[Math.floor(Math.random() * node.next.length)], true);
-      } else if (node.next.length > 1) {
-        onBranchChoice(node.next, player.currentNodeId, (chosen) => doMove(chosen, false));
-      } else {
-        doMove(node.next[0], false);
-      }
-    };
-
-    moveStep();
   }
 }
