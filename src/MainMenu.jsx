@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './MainMenu.css';
 
-function MainMenu({ onStartGame }) {
-  const [isSoundOn, setIsSoundOn] = useState(true);
+function MainMenu({ onStartGame, isSoundOn, onToggleSound }) {
 
   // 반짝이는 별 데이터 생성
   const stars = Array.from({ length: 12 }, (_, i) => ({
@@ -42,7 +41,7 @@ function MainMenu({ onStartGame }) {
       <div
         className="settings-btn-top-right"
         title={isSoundOn ? '소리 끄기' : '소리 켜기'}
-        onClick={() => setIsSoundOn(!isSoundOn)}
+        onClick={onToggleSound}
         role="button"
         tabIndex={0}
         id="sound-toggle"

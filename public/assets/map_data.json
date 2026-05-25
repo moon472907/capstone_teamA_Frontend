@@ -1,15 +1,19 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"campus_nodes_connected.json"
+        }
+    },
  "height":30,
  "infinite":false,
  "layers":[
         {
-         "id":2,
-         "image":"..\/..\/..\/..\/Users\/User\/Documents\/\uce74\uce74\uc624\ud1a1 \ubc1b\uc740 \ud30c\uc77c\/map.png",
-         "imageheight":941,
-         "imagewidth":1672,
-         "name":"Image Layer 1",
-         "offsetx":4,
-         "offsety":4,
+         "id":1,
+         "image":"campus_board_map.png",
+         "name":"map_image",
          "opacity":1,
          "type":"imagelayer",
          "visible":true,
@@ -18,46 +22,126 @@
         }, 
         {
          "draworder":"topdown",
-         "id":3,
+         "id":2,
          "name":"Object Layer 1",
          "objects":[
                 {
                  "height":0,
                  "id":1,
+                 "name":"node1",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"isStart",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"start"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node2,node52"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node2"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node52"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"status",
+                         "type":"string",
+                         "value":"start"
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"start"
+                        }],
+                 "rotation":0,
+                 "type":"start",
+                 "visible":true,
+                 "width":0,
+                 "x":385.5,
+                 "y":865.8
+                }, 
+                {
+                 "height":0,
+                 "id":2,
                  "name":"node2",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
-                         "name":"next",
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
                          "type":"string",
-                         "value":"node3"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":338,
-                 "y":758
-                }, 
-                {
-                 "height":0,
-                 "id":2,
-                 "name":"node8",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node1,node3,node53"
+                        }, 
                         {
                          "name":"next",
                          "type":"string",
-                         "value":"node9"
+                         "value":"node3"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node53"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":431,
-                 "y":729
+                 "x":409.5,
+                 "y":786.8
                 }, 
                 {
                  "height":0,
@@ -67,16 +151,46 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node2,node4"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node4"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"card",
                  "visible":true,
                  "width":0,
-                 "x":320,
-                 "y":630
+                 "x":332.5,
+                 "y":756.7
                 }, 
                 {
                  "height":0,
@@ -86,16 +200,46 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node3,node5"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node5"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"star",
                  "visible":true,
                  "width":0,
-                 "x":221,
-                 "y":561
+                 "x":310,
+                 "y":620
                 }, 
                 {
                  "height":0,
@@ -105,16 +249,46 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node4,node6"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node6"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":237,
-                 "y":423
+                 "x":217.5,
+                 "y":560.8
                 }, 
                 {
                  "height":0,
@@ -124,16 +298,46 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"minigame"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node5,node7"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node7"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"minigame"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"minigame",
                  "visible":true,
                  "width":0,
-                 "x":247,
-                 "y":299
+                 "x":231.1,
+                 "y":418.7
                 }, 
                 {
                  "height":0,
@@ -143,29 +347,383 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node6,node8,node40"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node8"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node40"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":242,
+                 "y":296.7
+                }, 
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"node8",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node7,node9"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node9"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":190.5,
+                 "y":228.8
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"node9",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node8,node10"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node10"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
+                        }],
+                 "rotation":0,
+                 "type":"card",
+                 "visible":true,
+                 "width":0,
+                 "x":268.2,
+                 "y":191.1
+                }, 
+                {
+                 "height":0,
+                 "id":10,
+                 "name":"node10",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node9,node11"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node11"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":342.5,
+                 "y":97.8
+                }, 
+                {
+                 "height":0,
+                 "id":11,
+                 "name":"node11",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":4
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node10,node12,node40,node41"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node12"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node41"
+                        }, 
+                        {
+                         "name":"next3",
+                         "type":"string",
+                         "value":"node40"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
+                        }],
+                 "rotation":0,
+                 "type":"star",
+                 "visible":true,
+                 "width":0,
+                 "x":407,
+                 "y":188
+                }, 
+                {
+                 "height":0,
+                 "id":12,
+                 "name":"node12",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node11,node13"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node13"
                         }, 
                         {
-                         "name":"next2",
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
                          "type":"string",
-                         "value":"node12"
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":351,
-                 "y":293
+                 "x":489.5,
+                 "y":164.8
                 }, 
                 {
                  "height":0,
-                 "id":8,
+                 "id":13,
                  "name":"node13",
                  "opacity":1,
                  "point":true,
                  "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node12,node14"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node14"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
+                        }],
+                 "rotation":0,
+                 "type":"card",
+                 "visible":true,
+                 "width":0,
+                 "x":599.9,
+                 "y":161.7
+                }, 
+                {
+                 "height":0,
+                 "id":14,
+                 "name":"node14",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node13,node15,node41"
+                        }, 
                         {
                          "name":"next",
                          "type":"string",
@@ -174,22 +732,101 @@
                         {
                          "name":"next2",
                          "type":"string",
-                         "value":"node17"
+                         "value":"node41"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":420,
-                 "y":208
+                 "x":663.4,
+                 "y":272.4
                 }, 
                 {
                  "height":0,
-                 "id":9,
-                 "name":"node12",
+                 "id":15,
+                 "name":"node15",
                  "opacity":1,
                  "point":true,
                  "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"bus"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node14,node16"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node16"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"bus"
+                        }],
+                 "rotation":0,
+                 "type":"bus",
+                 "visible":true,
+                 "width":0,
+                 "x":754.7,
+                 "y":229.3
+                }, 
+                {
+                 "height":0,
+                 "id":16,
+                 "name":"node16",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node15,node17,node45"
+                        }, 
                         {
                          "name":"next",
                          "type":"string",
@@ -198,241 +835,1156 @@
                         {
                          "name":"next2",
                          "type":"string",
-                         "value":"node11"
+                         "value":"node45"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":393,
-                 "y":346
+                 "x":838.5,
+                 "y":177.8
                 }, 
                 {
                  "height":0,
-                 "id":10,
-                 "name":"node11",
+                 "id":17,
+                 "name":"node17",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node16,node46"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
-                         "value":"node10"
+                         "value":"node46"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":450,
-                 "y":450
+                 "x":943.5,
+                 "y":177.8
                 }, 
                 {
                  "height":0,
-                 "id":11,
-                 "name":"node10",
+                 "id":18,
+                 "name":"node18",
                  "opacity":1,
                  "point":true,
                  "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node46,node19,node47"
+                        }, 
                         {
                          "name":"next",
                          "type":"string",
                          "value":"node19"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node47"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":512,
-                 "y":496
+                 "x":1068.5,
+                 "y":225.8
                 }, 
                 {
                  "height":0,
-                 "id":12,
-                 "name":"node9",
+                 "id":19,
+                 "name":"node19",
                  "opacity":1,
                  "point":true,
                  "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node18,node20"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node20"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
+                        }],
+                 "rotation":0,
+                 "type":"star",
+                 "visible":true,
+                 "width":0,
+                 "x":1185,
+                 "y":143
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"node20",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node19,node21"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node21"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":1297.5,
+                 "y":70.8
+                }, 
+                {
+                 "height":0,
+                 "id":21,
+                 "name":"node21",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"minigame"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node20,node22"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node22"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"minigame"
+                        }],
+                 "rotation":0,
+                 "type":"minigame",
+                 "visible":true,
+                 "width":0,
+                 "x":1348.9,
+                 "y":142.7
+                }, 
+                {
+                 "height":0,
+                 "id":22,
+                 "name":"node22",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"bus"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node21,node23"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node23"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"bus"
+                        }],
+                 "rotation":0,
+                 "type":"bus",
+                 "visible":true,
+                 "width":0,
+                 "x":1371.7,
+                 "y":268.3
+                }, 
+                {
+                 "height":0,
+                 "id":23,
+                 "name":"node23",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node22,node24,node47"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node24"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
+                        }],
+                 "rotation":0,
+                 "type":"star",
+                 "visible":true,
+                 "width":0,
+                 "x":1373,
+                 "y":333
+                }, 
+                {
+                 "height":0,
+                 "id":24,
+                 "name":"node24",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node23,node25"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node25"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":1284.5,
+                 "y":422.8
+                }, 
+                {
+                 "height":0,
+                 "id":25,
+                 "name":"node25",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node24,node26"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node26"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":1267.5,
+                 "y":523.8
+                }, 
+                {
+                 "height":0,
+                 "id":26,
+                 "name":"node26",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"minigame"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node25,node27"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node27"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"minigame"
+                        }],
+                 "rotation":0,
+                 "type":"minigame",
+                 "visible":true,
+                 "width":0,
+                 "x":1287.1,
+                 "y":631.2
+                }, 
+                {
+                 "height":0,
+                 "id":27,
+                 "name":"node27",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node26,node28"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node28"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":1306.5,
+                 "y":767.8
+                }, 
+                {
+                 "height":0,
+                 "id":28,
+                 "name":"node28",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node27,node29"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node29"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
+                        }],
+                 "rotation":0,
+                 "type":"star",
+                 "visible":true,
+                 "width":0,
+                 "x":1200,
+                 "y":792
+                }, 
+                {
+                 "height":0,
+                 "id":29,
+                 "name":"node29",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node28,node30"
+                        }, 
                         {
                          "name":"next",
                          "type":"string",
                          "value":"node30"
                         }, 
                         {
-                         "name":"next2",
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
                          "type":"string",
-                         "value":"node10"
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":471,
-                 "y":604
+                 "x":1143.5,
+                 "y":786.8
                 }, 
                 {
                  "height":0,
-                 "id":13,
+                 "id":30,
                  "name":"node30",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node29,node31,node48"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
-                         "value":"node35"
+                         "value":"node31"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"star",
                  "visible":true,
                  "width":0,
-                 "x":598,
-                 "y":622
+                 "x":913,
+                 "y":719
+                },
+            
+                {
+                 "height":0,
+                 "id":31,
+                 "name":"node31",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"bus"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node30,node32,node49"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node32"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node49"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"bus"
+                        }],
+                 "rotation":0,
+                 "type":"bus",
+                 "visible":true,
+                 "width":0,
+                 "x":829,
+                 "y":688
                 }, 
                 {
                  "height":0,
-                 "id":14,
+                 "id":32,
+                 "name":"node32",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node31,node33"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node33"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":778.5,
+                 "y":688.8
+                }, 
+                {
+                 "height":0,
+                 "id":33,
+                 "name":"node33",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node32,node34"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node34"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":717.5,
+                 "y":651.8
+                }, 
+                {
+                 "height":0,
+                 "id":34,
+                 "name":"node34",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node33,node35"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node35"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
+                        }],
+                 "rotation":0,
+                 "type":"card",
+                 "visible":true,
+                 "width":0,
+                 "x":588.5,
+                 "y":625.7
+                }, 
+                {
+                 "height":0,
+                 "id":35,
                  "name":"node35",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node34,node36,node53"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
+                         "value":"node53"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
                          "value":"node36"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":729,
-                 "y":657
+                 "x":459.5,
+                 "y":603.8
                 }, 
                 {
                  "height":0,
-                 "id":15,
-                 "name":"node34",
-                 "opacity":1,
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":735,
-                 "y":778
-                }, 
-                {
-                 "height":0,
-                 "id":16,
-                 "name":"node33",
-                 "opacity":1,
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":605,
-                 "y":753
-                }, 
-                {
-                 "height":0,
-                 "id":17,
-                 "name":"node32",
-                 "opacity":1,
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":579,
-                 "y":846
-                }, 
-                {
-                 "height":0,
-                 "id":18,
-                 "name":"node31",
-                 "opacity":1,
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":560,
-                 "y":897
-                }, 
-                {
-                 "height":0,
-                 "id":20,
+                 "id":36,
                  "name":"node36",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"bus"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node35,node37"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node37"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"bus"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"bus",
                  "visible":true,
                  "width":0,
-                 "x":786.666666666667,
-                 "y":692
+                 "x":473.7,
+                 "y":541.9
                 }, 
                 {
                  "height":0,
-                 "id":21,
+                 "id":37,
                  "name":"node37",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node36,node38,node42"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
-                         "value":"node38"
+                         "value":"node42"
                         }, 
                         {
                          "name":"next2",
                          "type":"string",
-                         "value":"node39"
+                         "value":"node38"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":933.333333333333,
-                 "y":734.666666666667
+                 "x":503.5,
+                 "y":486.8
                 }, 
                 {
                  "height":0,
-                 "id":22,
+                 "id":38,
                  "name":"node38",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node37,node39"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
-                         "value":"node18"
+                         "value":"node39"
                         }, 
                         {
                          "name":"next2",
                          "type":"string",
-                         "value":"node13"
+                         "value":"node37"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":1030.66666666667,
-                 "y":632
+                 "x":451.5,
+                 "y":445.8
                 }, 
                 {
                  "height":0,
-                 "id":23,
+                 "id":39,
                  "name":"node39",
                  "opacity":1,
                  "point":true,
                  "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"minigame"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node38,node40,node41"
+                        }, 
                         {
                          "name":"next",
                          "type":"string",
@@ -442,479 +1994,729 @@
                          "name":"next2",
                          "type":"string",
                          "value":"node40"
+                        }, 
+                        {
+                         "name":"next3",
+                         "type":"string",
+                         "value":"node38"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"minigame"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"minigame",
                  "visible":true,
                  "width":0,
-                 "x":1145.33333333333,
-                 "y":794.666666666667
+                 "x":385.6,
+                 "y":338.2
                 }, 
                 {
                  "height":0,
-                 "id":24,
+                 "id":40,
                  "name":"node40",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node7,node11,node39"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
-                         "value":"node13"
+                         "value":"node11"
                         }, 
                         {
                          "name":"next2",
                          "type":"string",
-                         "value":"node18"
+                         "value":"node39"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":1208,
-                 "y":877.333333333333
+                 "x":342.5,
+                 "y":279.8
                 }, 
                 {
                  "height":0,
-                 "id":25,
+                 "id":41,
                  "name":"node41",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node11,node14,node39"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
-                         "value":"node42"
+                         "value":"node14"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":1318.66666666667,
-                 "y":766.666666666667
+                 "x":494.5,
+                 "y":285.8
                 }, 
                 {
                  "height":0,
-                 "id":26,
+                 "id":42,
                  "name":"node42",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node37,node43"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node43"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"star",
                  "visible":true,
                  "width":0,
-                 "x":1297.33333333333,
-                 "y":640
+                 "x":670,
+                 "y":420
                 }, 
                 {
                  "height":0,
-                 "id":27,
+                 "id":43,
                  "name":"node43",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node42,node44"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node44"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"normal",
                  "visible":true,
                  "width":0,
-                 "x":1270.66666666667,
-                 "y":533.333333333333
+                 "x":791.5,
+                 "y":356.8
                 }, 
                 {
                  "height":0,
-                 "id":28,
+                 "id":44,
                  "name":"node44",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node43,node45"
+                        }, 
+                        {
                          "name":"next",
                          "type":"string",
                          "value":"node45"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"card",
                  "visible":true,
                  "width":0,
-                 "x":1284,
-                 "y":429.333333333333
+                 "x":857.1,
+                 "y":389.6
                 }, 
                 {
                  "height":0,
-                 "id":29,
+                 "id":45,
                  "name":"node45",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node46"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1400,
-                 "y":346.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":30,
-                 "name":"node28",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node45"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1374.66666666667,
-                 "y":270.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":31,
-                 "name":"node27",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node28"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1365.33333333333,
-                 "y":144
-                },
-            
-                {
-                 "height":0,
-                 "id":32,
-                 "name":"node26",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node27"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1304,
-                 "y":73.3333333333333
-                }, 
-                {
-                 "height":0,
-                 "id":33,
-                 "name":"node25",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node26"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1204,
-                 "y":154.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":34,
-                 "name":"node29",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node45"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1172,
-                 "y":274.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":35,
-                 "name":"node24",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node25"
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
                         }, 
                         {
-                         "name":"next2",
+                         "name":"kind",
                          "type":"string",
-                         "value":"node29"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1072,
-                 "y":226.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":36,
-                 "name":"node23",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
+                         "value":"minigame"
+                        }, 
                         {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node24"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":954.666666666667,
-                 "y":181.333333333333
-                }, 
-                {
-                 "height":0,
-                 "id":37,
-                 "name":"node22",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
                         {
-                         "name":"next",
+                         "name":"neighbors",
                          "type":"string",
-                         "value":"node23"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":848,
-                 "y":184
-                }, 
-                {
-                 "height":0,
-                 "id":38,
-                 "name":"node21",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node23"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":874.666666666667,
-                 "y":277.333333333333
-                }, 
-                {
-                 "height":0,
-                 "id":39,
-                 "name":"node20",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node21"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":800,
-                 "y":368
-                }, 
-                {
-                 "height":0,
-                 "id":40,
-                 "name":"node19",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node20"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":685.333333333333,
-                 "y":426.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":41,
-                 "name":"node18",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node22"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":670.666666666667,
-                 "y":278.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":42,
-                 "name":"node17",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node18"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":496,
-                 "y":290.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":43,
-                 "name":"node15",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
+                         "value":"node16,node44"
+                        }, 
                         {
                          "name":"next",
                          "type":"string",
                          "value":"node16"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":498.666666666667,
-                 "y":174.666666666667
-                }, 
-                {
-                 "height":0,
-                 "id":44,
-                 "name":"node16",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
+                        }, 
                         {
-                         "name":"next",
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
                          "type":"string",
-                         "value":"node18"
+                         "value":"minigame"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"minigame",
                  "visible":true,
                  "width":0,
-                 "x":612,
-                 "y":164
-                }, 
-                {
-                 "height":0,
-                 "id":45,
-                 "name":"node14",
-                 "opacity":1,
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":346.666666666667,
-                 "y":102.666666666667
+                 "x":869,
+                 "y":271.2
                 }, 
                 {
                  "height":0,
                  "id":46,
-                 "name":"node1",
-                 "opacity":1,
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"next",
-                         "type":"string",
-                         "value":"node8"
-                        }, 
-                        {
-                         "name":"next2",
-                         "type":"string",
-                         "value":"node2"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":404,
-                 "y":869
-                }, 
-                {
-                 "height":0,
-                 "id":48,
                  "name":"node46",
                  "opacity":1,
                  "point":true,
                  "properties":[
                         {
-                         "name":"status",
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
                          "type":"string",
-                         "value":"finish"
+                         "value":"minigame"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node17,node18,node48"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node18"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node48"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"minigame"
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"minigame",
                  "visible":true,
                  "width":0,
-                 "x":1473.33333333333,
-                 "y":337.333333333333
+                 "x":1018.1,
+                 "y":263.3
+                }, 
+                {
+                 "height":0,
+                 "id":47,
+                 "name":"node47",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node18,node23"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node23"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
+                        }],
+                 "rotation":0,
+                 "type":"card",
+                 "visible":true,
+                 "width":0,
+                 "x":1172.4,
+                 "y":277.2
+                }, 
+                {
+                 "height":0,
+                 "id":48,
+                 "name":"node48",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node46,node30"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node30"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
+                        }],
+                 "rotation":0,
+                 "type":"card",
+                 "visible":true,
+                 "width":0,
+                 "x":1026.6,
+                 "y":626.3
+                }, 
+                {
+                 "height":0,
+                 "id":49,
+                 "name":"node49",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node31,node50"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node50"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"card"
+                        }],
+                 "rotation":0,
+                 "type":"card",
+                 "visible":true,
+                 "width":0,
+                 "x":723.3,
+                 "y":779
+                }, 
+                {
+                 "height":0,
+                 "id":50,
+                 "name":"node50",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"minigame"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node49,node51,node53"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node51"
+                        }, 
+                        {
+                         "name":"next2",
+                         "type":"string",
+                         "value":"node49"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"minigame"
+                        }],
+                 "rotation":0,
+                 "type":"minigame",
+                 "visible":true,
+                 "width":0,
+                 "x":599.6,
+                 "y":751.3
+                }, 
+                {
+                 "height":0,
+                 "id":51,
+                 "name":"node51",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"normal"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node50,node52"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node52"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"normal"
+                        }],
+                 "rotation":0,
+                 "type":"normal",
+                 "visible":true,
+                 "width":0,
+                 "x":569.5,
+                 "y":836.8
+                }, 
+                {
+                 "height":0,
+                 "id":52,
+                 "name":"node52",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"star"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node1,node51"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node1"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"star"
+                        }],
+                 "rotation":0,
+                 "type":"star",
+                 "visible":true,
+                 "width":0,
+                 "x":546,
+                 "y":882
+                }, 
+                {
+                 "height":0,
+                 "id":53,
+                 "name":"node53",
+                 "opacity":1,
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"branch",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"kind",
+                         "type":"string",
+                         "value":"minigame"
+                        }, 
+                        {
+                         "name":"neighborCount",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"neighbors",
+                         "type":"string",
+                         "value":"node2,node35,node50"
+                        }, 
+                        {
+                         "name":"next",
+                         "type":"string",
+                         "value":"node50"
+                        }, 
+                        {
+                         "name":"nextCount",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"tileKind",
+                         "type":"string",
+                         "value":"minigame"
+                        }],
+                 "rotation":0,
+                 "type":"minigame",
+                 "visible":true,
+                 "width":0,
+                 "x":421.6,
+                 "y":723.2
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -922,8 +2724,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":4,
- "nextobjectid":49,
+ "nextlayerid":3,
+ "nextobjectid":54,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.12.1",

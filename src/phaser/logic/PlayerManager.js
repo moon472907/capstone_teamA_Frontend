@@ -84,60 +84,12 @@ export default class PlayerManager {
     });
   }
 
-  // ── Teleport: shrink-rise → snap → fall-grow  (rules 7 & 8) ─
-  _animateTeleport(si, tx, ty, onComplete) {
-    const s = this.playerSprites[si];
-    s.sprite.play("player_run");
-
-    // Phase 1 — rise, shrink, fade out
-    this.scene.tweens.add({
-      targets: s.sprite,
-      y: s.sprite.y - 110,
-      scaleX: 0, scaleY: 0,
-      alpha: 0,
-      duration: 520,
-      ease: "Sine.easeIn",
-      onComplete: () => {
-        // Snap to above destination (invisible)
-        s.sprite.setPosition(tx, ty - 90).setScale(0).setAlpha(0);
-        s.shadow.setPosition(tx, ty + 8).setAlpha(0);
-
-        // Phase 2 — fall, grow, fade in
-        this.scene.tweens.add({
-          targets: s.sprite,
-          y: ty,
-          scaleX: SPRITE_SCALE,
-          scaleY: SPRITE_SCALE,
-          alpha: 1,
-          duration: 640,
-          ease: "Bounce.easeOut",
-          onComplete: () => {
-            s.sprite.play("player_idle");
-            if (onComplete) onComplete();
-          }
-        });
-        this.scene.tweens.add({
-          targets: s.shadow,
-          alpha: 1,
-          duration: 400
-        });
-      }
-    });
-
-    // Shadow fades out independently
-    this.scene.tweens.add({
-      targets: s.shadow,
-      alpha: 0,
-      duration: 320
-    });
-  }
-
   // ── Main movement controller ─────────────────────────────────
   movePlayer(playerIndex, steps, onBranchChoice, onFinish) {
     const player = this.gameManager.players[playerIndex];
     let stepsLeft = steps;
 
-    const doMove = (targetId, useTeleport) => {
+    const doMove = (targetId) => {
       const target = this.boardManager.getNodeById(targetId);
       if (!target) { onFinish(false); return; }
 
@@ -148,9 +100,7 @@ export default class PlayerManager {
         this.scene.time.delayedCall(80, moveStep);
       };
 
-      useTeleport
-        ? this._animateTeleport(playerIndex, target.x, target.y, afterLand)
-        : this._animateMove(playerIndex, target.x, target.y, afterLand);
+      this._animateMove(playerIndex, target.x, target.y, afterLand);
     };
 
     const moveStep = () => {
@@ -159,14 +109,10 @@ export default class PlayerManager {
       const node = this.boardManager.getNodeById(player.currentNodeId);
       if (!node || node.next.length === 0) { onFinish(false); return; }
 
-      const isTeleport = (player.currentNodeId === "node38" || player.currentNodeId === "node40");
-
-      if (isTeleport) {
-        doMove(node.next[Math.floor(Math.random() * node.next.length)], true);
-      } else if (node.next.length > 1) {
-        onBranchChoice(node.next, player.currentNodeId, (chosen) => doMove(chosen, false));
+      if (node.next.length > 1) {
+        onBranchChoice(node.next, player.currentNodeId, (chosen) => doMove(chosen));
       } else {
-        doMove(node.next[0], false);
+        doMove(node.next[0]);
       }
     };
 
