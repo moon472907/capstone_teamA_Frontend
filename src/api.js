@@ -11,7 +11,7 @@ function setToken(token) {
 
 // 개발(Vite 프록시): 빈 문자열 → 상대경로 사용
 // 운영(Vercel): VITE_API_URL = https://api.everyknu.cloud
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = (import.meta.env.VITE_API_URL || '').trim();
 
 async function request(method, path, body) {
   const token = getToken();

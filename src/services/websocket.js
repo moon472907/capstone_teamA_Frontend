@@ -1,7 +1,7 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const BASE_URL = (import.meta.env.VITE_API_URL || '').trim();
 
 /**
  * 게임 WebSocket 연결 생성
@@ -59,9 +59,14 @@ export const WS_EVENTS = {
   PLAYER_READY:     'PLAYER_READY',
   GAME_STARTED:     'GAME_STARTED',
   TURN_CHANGED:     'TURN_CHANGED',
-  DICE_ROLLED:      'DICE_ROLLED',
-  PLAYER_MOVED:     'PLAYER_MOVED',
-  BRANCH_REQUIRED:  'BRANCH_REQUIRED',
-  TILE_TRIGGERED:   'TILE_TRIGGERED',
-  GAME_ENDED:       'GAME_ENDED'
+  DICE_ROLLED:          'DICE_ROLLED',
+  PLAYER_MOVED:         'PLAYER_MOVED',
+  BRANCH_REQUIRED:      'BRANCH_REQUIRED',
+  TILE_TRIGGERED:       'TILE_TRIGGERED',
+  CARD_DRAWN:           'CARD_DRAWN',
+  CARD_TARGET_REQUIRED: 'CARD_TARGET_REQUIRED',
+  DEFENSE_PROMPT:       'DEFENSE_PROMPT',
+  BUS_RIDE_REQUIRED:    'BUS_RIDE_REQUIRED',
+  TURN_SKIPPED:         'TURN_SKIPPED',
+  GAME_ENDED:           'GAME_ENDED'
 };

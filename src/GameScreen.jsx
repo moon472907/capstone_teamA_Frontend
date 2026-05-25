@@ -1,8 +1,25 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import PhaserGame from './phaser/PhaserGame';
-import { rollDice, selectBranch, getGameState, toNodeId, toTileId } from './services/api';
+import {
+  rollDice, selectBranch, getGameState,
+  selectCardTarget, resolveDefense, selectBusDestination,
+  toNodeId, toTileId
+} from './services/api';
 import { createGameSocket, WS_EVENTS } from './services/websocket';
 import { EVENT_NODES, EVENT_TYPE_LABEL, pickRandomEvent } from './data/kangwonEvents';
+
+// 서버 카드(cardKey/cardType/title/description) → 화면 표시용 변환
+const CARD_EMOJI = {
+  police: '🚔', freeloader: '😴', course_fail: '😱', drinking: '🍻', skipper: '🏃', breakup: '💔',
+  guardian: '🐻‍❄️', top: '🏆', global: '🌍', work: '💼', veteran: '🎖️', capstone: '🎓',
+};
+const CARD_TYPE_TO_KIND = { ATTACK: 'attack', DEFENSE: 'defense', SCHOLARSHIP: 'scholarship' };
+const serverCardToDisplay = (p) => ({
+  type: CARD_TYPE_TO_KIND[p.cardType] || 'attack',
+  emoji: CARD_EMOJI[p.cardKey] || '🎴',
+  title: p.title,
+  description: p.description,
+});
 
 const STAR_NODES    = new Set(['node4','node11','node19','node23','node28','node30','node42','node52']);
 const BUS_NODES     = new Set(['node15', 'node22', 'node31', 'node36']);
@@ -50,7 +67,14 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
   const pendingTurnRef = useRef(false);
 
   // ── 두리버스 ───────────────────────────────────────────────
-  const [busRideOptions, setBusRideOptions] = useState(null);
+  const [busRideOptions, setBusRideOptions] = useState(null);          // 로컬 모드 (정류장 nodeId 문자열)
+  const [serverBusOptions, setServerBusOptions] = useState(null);      // 서버 모드 (nodeNumber 배열)
+
+  // ── 서버 카드 인터랙션 ─────────────────────────────────────
+  const [cardTargetOptions, setCardTargetOptions] = useState(null);    // 공격 대상 지정 (playerId 배열)
+  const [pendingAttackCard,  setPendingAttackCard]  = useState(null);  // { cardKey, title }
+  const [defensePrompt,      setDefensePrompt]      = useState(null);   // { attackerPlayerId, title, starsChange, defenseCards }
+  const [busy,               setBusy]               = useState(false);  // 서버 액션 전송 중
 
   // ── 스타 ───────────────────────────────────────────────────
   const [stars,         setStars]         = useState(0);
@@ -105,23 +129,77 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         break;
 
       case WS_EVENTS.PLAYER_MOVED: {
-        const nodeId = toNodeId(payload.tileIndex ?? payload.toTileId);
-        getBoardScene()?.movePlayerToNode(nodeId);
+        // 서버는 nodeNumber(1~53)를 보냄 → "node{n}" 으로 매핑
+        const n = payload.nodeNumber ?? payload.tileIndex ?? payload.toTileId;
+        getBoardScene()?.movePlayerToNode(toNodeId(n));
         break;
       }
 
       case WS_EVENTS.BRANCH_REQUIRED:
+        // branchOptions 는 nodeNumber 배열
         setBranchOptions(payload.branchOptions);
         break;
 
       case WS_EVENTS.TILE_TRIGGERED:
+        // 스타/코인 변동을 해당 플레이어에 반영
+        if (payload.playerId != null && (payload.totalStars != null || payload.totalCoins != null)) {
+          setPlayers(prev => prev?.map(p => p.playerId === payload.playerId
+            ? { ...p,
+                stars: payload.totalStars ?? p.stars,
+                coins: payload.totalCoins ?? p.coins,
+                defenseCards: payload.defenseCards ?? p.defenseCards }
+            : p));
+        }
         setTileEvent({
-          coinsChange:  payload.coinsChange,
-          totalCoins:   payload.totalCoins,
-          description:  payload.description,
-          tileType:     payload.tileType
+          coinsChange: payload.coinsChange,
+          totalCoins:  payload.totalCoins,
+          starsChange: payload.starsChange,
+          totalStars:  payload.totalStars,
+          description: payload.description,
+          tileType:    payload.tileType
         });
         setTimeout(() => setTileEvent(null), 3000);
+        break;
+
+      case WS_EVENTS.CARD_DRAWN:
+        // 모든 플레이어에게 뽑힌 카드 공개 (잠시 후 자동 닫힘)
+        setActiveEvent(serverCardToDisplay(payload));
+        setEventFlipped(false);
+        setTimeout(() => setEventFlipped(true), 800);
+        setTimeout(() => { setActiveEvent(null); setEventFlipped(false); }, 3500);
+        break;
+
+      case WS_EVENTS.CARD_TARGET_REQUIRED:
+        // 공격 카드를 뽑은 본인만 대상 선택 UI 표시
+        if (payload.playerId === playerId) {
+          setPendingAttackCard({ cardKey: payload.cardKey, title: payload.title });
+          setCardTargetOptions(payload.targetOptions);
+        }
+        break;
+
+      case WS_EVENTS.DEFENSE_PROMPT:
+        // 피격 대상 본인만 방어 사용 여부 UI 표시
+        if (payload.targetPlayerId === playerId) {
+          setDefensePrompt({
+            attackerPlayerId: payload.attackerPlayerId,
+            title: payload.title,
+            starsChange: payload.starsChange,
+            defenseCards: payload.defenseCards
+          });
+        }
+        break;
+
+      case WS_EVENTS.BUS_RIDE_REQUIRED:
+        // 현재 플레이어 본인만 정류장 선택 UI 표시
+        if (payload.playerId === playerId) {
+          setServerBusOptions(payload.busOptions);
+        }
+        break;
+
+      case WS_EVENTS.TURN_SKIPPED:
+        setNextPlayerName(`${payload.nickname}님은 이번 턴을 쉽니다`);
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 1800);
         break;
 
       case WS_EVENTS.TURN_CHANGED:
@@ -140,7 +218,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
       default:
         break;
     }
-  }, [getBoardScene]);
+  }, [getBoardScene, playerId]);
 
   // ── 설정 드롭다운 바깥 클릭 닫기 ──────────────────────────
   useEffect(() => {
@@ -165,7 +243,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
           if (data.nextState === 'BRANCH_SELECT') {
             setBranchOptions(data.branchOptions);
           } else {
-            const nodeId = toNodeId(data.toTileId);
+            const nodeId = toNodeId(data.toNodeNumber);
             scene?.movePlayerToNode(nodeId, () => {
               if (data.gameEnded) setIsRolling(false);
             });
@@ -194,7 +272,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     if (gameId) {
       try {
         const data = await selectBranch(gameId, tileId);
-        const nodeId = toNodeId(data.toTileId);
+        const nodeId = toNodeId(data.toNodeNumber);
         const scene  = getBoardScene();
         if (data.nextState === 'BRANCH_SELECT') {
           scene?.movePlayerToNode(nodeId, () => setBranchOptions(data.branchOptions));
@@ -246,11 +324,57 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     });
   }, [getBoardScene, doLocalTurnChange]);
 
+  // ── 서버 모드: 공격 카드 대상 지정 ─────────────────────────
+  const handleCardTargetSelect = useCallback(async (targetPlayerId) => {
+    if (busy) return;
+    setBusy(true);
+    setCardTargetOptions(null);
+    setPendingAttackCard(null);
+    try {
+      await selectCardTarget(gameId, targetPlayerId);
+    } catch (err) {
+      console.error('카드 대상 지정 실패:', err);
+    } finally {
+      setBusy(false);
+    }
+  }, [busy, gameId]);
+
+  // ── 서버 모드: 방어 카드 사용 여부 ─────────────────────────
+  const handleDefenseChoice = useCallback(async (useDef) => {
+    if (busy) return;
+    setBusy(true);
+    setDefensePrompt(null);
+    try {
+      await resolveDefense(gameId, useDef);
+    } catch (err) {
+      console.error('방어 처리 실패:', err);
+    } finally {
+      setBusy(false);
+    }
+  }, [busy, gameId]);
+
+  // ── 서버 모드: 두리버스 정류장 선택 ────────────────────────
+  const handleServerBusSelect = useCallback(async (nodeNumber) => {
+    if (busy) return;
+    setBusy(true);
+    setServerBusOptions(null);
+    try {
+      await selectBusDestination(gameId, nodeNumber);
+    } catch (err) {
+      console.error('정류장 선택 실패:', err);
+    } finally {
+      setBusy(false);
+    }
+  }, [busy, gameId]);
+
   // ── Phaser 이동 완료 콜백 ──────────────────────────────────
   const handleMoveDone = ({ isWin, nodeId }) => {
+    // 서버 모드: 카드/버스/스타는 서버 이벤트가 구동하므로 로컬 처리 안 함
+    if (gameId) return;
+
     if (isWin) {
       setGameResult([{ nickname: displayPlayers[0]?.nickname || '플레이어', rank: 1, coins: 0 }]);
-      if (!gameId) setIsRolling(false);
+      setIsRolling(false);
       return;
     }
 
@@ -294,6 +418,10 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
   const tileEventColor = {
     RANDOM_REWARD: '#48BB78',
     TRAP:          '#E53E3E',
+    STAR:          '#F6AD55',
+    MINIGAME:      '#9F7AEA',
+    CARD:          '#4299E1',
+    BUS:           '#38B2AC',
   }[tileEvent?.tileType] ?? '#CBD5E0';
 
   // ── 렌더 ───────────────────────────────────────────────────
@@ -358,8 +486,8 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
             <div className="badge-info">
               <span className="badge-name">{player.nickname ?? player.name}</span>
               <div className="badge-stats">
-                <span className="badge-gpa">코인: {player.coins ?? 0}</span>
-                {idx === 0 && <span className="badge-star">⭐ {stars}</span>}
+                <span className="badge-star">⭐ {player.stars ?? (idx === 0 ? stars : 0)}</span>
+                {(player.defenseCards ?? 0) > 0 && <span className="badge-gpa">🛡️ {player.defenseCards}</span>}
               </div>
             </div>
           </div>
@@ -381,16 +509,22 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         <div className="turn-overlay" style={{ pointerEvents: 'none' }}>
           <div className="turn-alert" style={{ border: `2px solid ${tileEventColor}`, textAlign: 'center' }}>
             <p style={{ color: tileEventColor, fontWeight: 'bold', fontSize: '1.1rem', margin: '0 0 8px' }}>
-              {tileEvent.tileType === 'RANDOM_REWARD' ? '🎉 행운!' :
-               tileEvent.tileType === 'TRAP'          ? '💀 함정!' : '📋 이벤트'}
+              {tileEvent.tileType === 'STAR'     ? '⭐ 스타!' :
+               tileEvent.tileType === 'MINIGAME' ? '🎮 미니게임!' :
+               tileEvent.tileType === 'CARD'     ? '🎴 이벤트 카드!' :
+               tileEvent.tileType === 'BUS'      ? '🚌 두리버스!' : '📋 이벤트'}
             </p>
-            <h3 style={{ color: tileEventColor, margin: '0 0 4px' }}>
-              {tileEvent.coinsChange > 0 ? `+${tileEvent.coinsChange}` : tileEvent.coinsChange} 코인
-            </h3>
+            {tileEvent.starsChange != null && tileEvent.starsChange !== 0 && (
+              <h3 style={{ color: tileEventColor, margin: '0 0 4px' }}>
+                {tileEvent.starsChange > 0 ? `+${tileEvent.starsChange}` : tileEvent.starsChange} ⭐
+              </h3>
+            )}
             <p style={{ fontSize: '0.9rem', color: '#4A5568', margin: 0 }}>{tileEvent.description}</p>
-            <p style={{ fontSize: '0.85rem', color: '#718096', margin: '4px 0 0' }}>
-              보유 코인: {tileEvent.totalCoins}
-            </p>
+            {tileEvent.totalStars != null && (
+              <p style={{ fontSize: '0.85rem', color: '#718096', margin: '4px 0 0' }}>
+                보유 스타: {tileEvent.totalStars} ⭐
+              </p>
+            )}
           </div>
         </div>
       )}
@@ -438,6 +572,79 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
               ))}
             </div>
             <p className="bus-hint">✨ 지도에서 반짝이는 정류장으로 이동합니다</p>
+          </div>
+        </div>
+      )}
+
+      {/* 두리버스 탑승 (서버 모드) */}
+      {serverBusOptions && (
+        <div className="bus-overlay fade-in">
+          <div className="bus-popup pop-in">
+            <div className="bus-popup-header">
+              <span className="bus-icon-large">🚌</span>
+              <h2 className="bus-title">두리버스 탑승!</h2>
+              <p className="bus-sub">이동할 정류장을 선택하세요</p>
+            </div>
+            <div className="bus-options">
+              {serverBusOptions.map(nodeNumber => (
+                <button
+                  key={nodeNumber}
+                  className="bus-option-btn"
+                  disabled={busy}
+                  onClick={() => handleServerBusSelect(nodeNumber)}
+                >
+                  <span className="bus-option-icon">📍</span>
+                  <span>{BUS_NODE_LABEL[`node${nodeNumber}`] ?? `정류장 (#${nodeNumber})`}</span>
+                </button>
+              ))}
+            </div>
+            <p className="bus-hint">✨ 선택한 정류장으로 순간이동합니다</p>
+          </div>
+        </div>
+      )}
+
+      {/* 공격 카드 대상 지정 (서버 모드) */}
+      {cardTargetOptions && (
+        <div className="turn-overlay">
+          <div className="branch-alert">
+            <h2>🎯 공격 대상 선택</h2>
+            <p>{pendingAttackCard?.title} — 누구를 공격할까요?</p>
+            <div className="branch-btn-group">
+              {cardTargetOptions.map((targetId, idx) => {
+                const target = displayPlayers.find(p => p.playerId === targetId);
+                return (
+                  <button
+                    key={targetId}
+                    className={`branch-btn ${idx % 2 === 1 ? 'orange' : ''}`}
+                    disabled={busy}
+                    onClick={() => handleCardTargetSelect(targetId)}
+                  >
+                    {target?.nickname ?? `플레이어 ${targetId}`}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 방어 카드 사용 여부 (서버 모드) */}
+      {defensePrompt && (
+        <div className="turn-overlay">
+          <div className="branch-alert">
+            <h2>🛡️ 곰두리의 수호</h2>
+            <p>
+              {defensePrompt.title} 공격! (스타 {defensePrompt.starsChange})<br />
+              방어 카드를 사용할까요? (보유 {defensePrompt.defenseCards}장)
+            </p>
+            <div className="branch-btn-group">
+              <button className="branch-btn" disabled={busy} onClick={() => handleDefenseChoice(true)}>
+                방어 사용
+              </button>
+              <button className="branch-btn orange" disabled={busy} onClick={() => handleDefenseChoice(false)}>
+                그냥 맞기
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -513,7 +720,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
                   color: r.rank === 1 ? '#f7c948' : '#4A5568'
                 }}>
                   <span>{r.rank}위  {r.nickname}</span>
-                  <span>{r.coins} 코인</span>
+                  <span>{r.stars ?? r.coins} ⭐</span>
                 </div>
               ))}
             </div>
