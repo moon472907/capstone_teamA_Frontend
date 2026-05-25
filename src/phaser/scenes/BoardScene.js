@@ -26,7 +26,7 @@ export default class BoardScene extends Phaser.Scene {
       stroke: '#003d73',
       strokeThickness: 8,
       shadow: { offsetX: 4, offsetY: 4, color: '#000000', blur: 0, fill: true },
-    }).setOrigin(0.5).setDepth(1000).setVisible(false);
+    }).setOrigin(0.5).setDepth(1000).setScrollFactor(0).setVisible(false);
 
     // 줌 힌트 텍스트
     const hint = this.add.text(centerX, 24, "🖱 스크롤: 줌인/줌아웃  |  드래그: 이동  |  더블클릭: 전체 보기", {
@@ -156,12 +156,9 @@ export default class BoardScene extends Phaser.Scene {
     });
   }
 
-  // 주사위 애니메이션만 표시 (플레이어 스프라이트 위치 기준)
+  // 주사위 애니메이션만 표시 (화면 하단 중앙에 고정 표시)
   showDiceAnimation(value, onComplete) {
-    const sprite = this.playerManager.playerSprites[0]?.sprite;
-    if (sprite) {
-      this.diceResultText.setPosition(sprite.x, sprite.y - 70);
-    }
+    this.diceResultText.setPosition(this.scale.width / 2, this.scale.height - 160);
     this.diceResultText.setVisible(true).setScale(1).setText('?');
     let count = 0;
     this.time.addEvent({

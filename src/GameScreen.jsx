@@ -14,6 +14,11 @@ const CARD_EMOJI = {
   guardian: '🐻‍❄️', top: '🏆', global: '🌍', work: '💼', veteran: '🎖️', capstone: '🎓',
 };
 const CARD_TYPE_TO_KIND = { ATTACK: 'attack', DEFENSE: 'defense', SCHOLARSHIP: 'scholarship' };
+
+// 서버 플레이어의 characterKey → 이모지 (뱃지 표시용)
+const CHAR_ICON = {
+  gomduri: '🐻‍❄️', narae: '🕊️', daramji: '🐿️', bunny: '🐰', fox: '🦊', cat: '🐱',
+};
 const serverCardToDisplay = (p) => ({
   type: CARD_TYPE_TO_KIND[p.cardType] || 'attack',
   emoji: CARD_EMOJI[p.cardKey] || '🎴',
@@ -83,10 +88,25 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
   // ── Phaser 브릿지 ──────────────────────────────────────────
   const phaserGameRef = useRef(null);
   const wsClientRef   = useRef(null);
+  const [sceneReady, setSceneReady] = useState(false);
+  const boardInitedRef = useRef(false);
 
   const getBoardScene = useCallback(() => {
     return phaserGameRef.current?.scene?.getScene('BoardScene') ?? null;
   }, []);
+
+  // 서버 플레이어로 보드 말 생성 (씬 준비 + 플레이어 로드 후 1회)
+  useEffect(() => {
+    if (!gameId || !sceneReady || boardInitedRef.current || !players?.length) return;
+    const scene = getBoardScene();
+    if (!scene) return;
+    scene.initPlayers(players.map(p => ({
+      playerId: p.playerId,
+      nodeName: toNodeId(p.tileNumber ?? p.tileId ?? 1),
+      nickname: p.nickname,
+    })));
+    boardInitedRef.current = true;
+  }, [gameId, sceneReady, players, getBoardScene]);
 
   // ── 현재 표시할 플레이어 목록 (서버 or 더미) ───────────────
   const displayPlayers = players ?? [
@@ -135,15 +155,17 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         break;
 
       case WS_EVENTS.PLAYER_MOVED: {
-        // 서버는 nodeNumber(1~53)를 보냄 → "node{n}" 으로 매핑
+        // 서버는 nodeNumber(1~53)를 보냄 → 해당 playerId의 말을 그 노드로 이동
         const n = payload.nodeNumber ?? payload.tileIndex ?? payload.toTileId;
-        getBoardScene()?.movePlayerToNode(toNodeId(n));
+        getBoardScene()?.movePlayer(payload.playerId, [toNodeId(n)]);
         break;
       }
 
       case WS_EVENTS.BRANCH_REQUIRED:
-        // branchOptions 는 nodeNumber 배열
-        setBranchOptions(payload.branchOptions);
+        // 갈림길은 굴린 본인에게만 표시 (branchOptions = nodeNumber 배열)
+        if (payload.playerId === myPlayerIdRef.current) {
+          setBranchOptions(payload.branchOptions);
+        }
         break;
 
       case WS_EVENTS.TILE_TRIGGERED:
@@ -242,19 +264,9 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     setIsRolling(true);
 
     if (gameId) {
+      // 서버 권위: 주사위/이동/분기 연출은 모두 WS 이벤트(DICE_ROLLED/PLAYER_MOVED/BRANCH_REQUIRED)로 구동
       try {
-        const data = await rollDice(gameId);
-        const scene = getBoardScene();
-        scene?.showDiceAnimation(data.diceValue, () => {
-          if (data.nextState === 'BRANCH_SELECT') {
-            setBranchOptions(data.branchOptions);
-          } else {
-            const nodeId = toNodeId(data.toNodeNumber);
-            scene?.movePlayerToNode(nodeId, () => {
-              if (data.gameEnded) setIsRolling(false);
-            });
-          }
-        });
+        await rollDice(gameId);
       } catch (err) {
         console.error('주사위 굴리기 실패:', err);
         setIsRolling(false);
@@ -276,15 +288,9 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     setBranchOptions(null);
 
     if (gameId) {
+      // 서버 권위: 이동/추가 분기 연출은 WS 이벤트로 구동 (branchOptions는 nodeNumber)
       try {
-        const data = await selectBranch(gameId, tileId);
-        const nodeId = toNodeId(data.toNodeNumber);
-        const scene  = getBoardScene();
-        if (data.nextState === 'BRANCH_SELECT') {
-          scene?.movePlayerToNode(nodeId, () => setBranchOptions(data.branchOptions));
-        } else {
-          scene?.movePlayerToNode(nodeId);
-        }
+        await selectBranch(gameId, tileId);
       } catch (err) {
         console.error('분기 선택 실패:', err);
       }
@@ -418,6 +424,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
 
   const handleGameReady = (gameInstance) => {
     phaserGameRef.current = gameInstance;
+    setSceneReady(true);
   };
 
   // ── 타일 이벤트 색상 ──────────────────────────────────────
@@ -487,7 +494,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         {displayPlayers.map((player, idx) => (
           <div key={player.playerId ?? idx} className={`player-badge ${idx === currentPlayerIdx ? 'active' : ''}`}>
             <div className="badge-icon" style={{ backgroundColor: player.color ?? '#85CDEE' }}>
-              {player.icon ?? player.characterKey ?? '🎮'}
+              {player.icon ?? CHAR_ICON[player.characterKey] ?? '🎮'}
             </div>
             <div className="badge-info">
               <span className="badge-name">{player.nickname ?? player.name}</span>

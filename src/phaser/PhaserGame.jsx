@@ -5,7 +5,7 @@ import PreloadScene from './scenes/PreloadScene.js';
 import MenuScene from './scenes/MenuScene.js';
 import BoardScene from './scenes/BoardScene.js';
 
-export default function PhaserGame({ onBoardReady }) {
+export default function PhaserGame({ onGameReady }) {
   const gameRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -27,10 +27,9 @@ export default function PhaserGame({ onBoardReady }) {
       const game = new Phaser.Game(config);
       gameRef.current = game;
 
-      // BoardScene.create()에서 emit하는 준비 완료 이벤트
+      // BoardScene.create()에서 emit하는 준비 완료 이벤트 → game 인스턴스를 React로 전달
       game.events.once('boardReady', () => {
-        const scene = game.scene.getScene('BoardScene');
-        onBoardReady?.(scene);
+        onGameReady?.(game);
       });
     }
 
