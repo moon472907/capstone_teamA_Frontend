@@ -139,4 +139,39 @@ export default class PlayerManager {
       ease: 'Sine.easeInOut',
     });
   }
+
+  // ── Main movement controller ─────────────────────────────────
+  movePlayer(playerIndex, steps, onBranchChoice, onFinish) {
+    const player = this.gameManager.players[playerIndex];
+    let stepsLeft = steps;
+
+    const doMove = (targetId) => {
+      const target = this.boardManager.getNodeById(targetId);
+      if (!target) { onFinish(false); return; }
+
+      const afterLand = () => {
+        player.currentNodeId = targetId;
+        stepsLeft--;
+        if (target.status === "finish") { onFinish(true); return; }
+        this.scene.time.delayedCall(80, moveStep);
+      };
+
+      this._animateMove(playerIndex, target.x, target.y, afterLand);
+    };
+
+    const moveStep = () => {
+      if (stepsLeft <= 0) { onFinish(false); return; }
+
+      const node = this.boardManager.getNodeById(player.currentNodeId);
+      if (!node || node.next.length === 0) { onFinish(false); return; }
+
+      if (node.next.length > 1) {
+        onBranchChoice(node.next, player.currentNodeId, (chosen) => doMove(chosen));
+      } else {
+        doMove(node.next[0]);
+      }
+    };
+
+    moveStep();
+  }
 }
