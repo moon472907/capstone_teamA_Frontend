@@ -429,10 +429,10 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
 
 
 
-  const handleGameReady = (gameInstance) => {
+  const handleGameReady = useCallback((gameInstance) => {
     phaserGameRef.current = gameInstance;
     setSceneReady(true);
-  };
+  }, []);
 
   // ── 타일 이벤트 색상 ──────────────────────────────────────
   const tileEventColor = {
@@ -478,7 +478,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         <div className="board-area">
           <PhaserGame
             selectedCharacter={selectedCharacter}
-            onBoardReady={handleGameReady}
+            onGameReady={handleGameReady}
             onLandmarkClick={handleLandmarkClick}
             onRequireBranchChoice={handleRequireBranchChoice}
             onMoveDone={handleMoveDone}
