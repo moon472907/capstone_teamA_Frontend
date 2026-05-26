@@ -703,7 +703,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         <div className="turn-overlay" style={{ pointerEvents: 'none' }}>
           <div className="star-alert pop-in">
             <div className="star-alert-img">
-              <img src="/assets/images/star/star.jpg" alt="star" />
+              <img src="/assets/images/star/star.png" alt="star" />
             </div>
             <h2>스타 획득!</h2>
             <p>보유 스타: {stars}개</p>

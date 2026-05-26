@@ -36,7 +36,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image("bus", "/assets/images/bus'/bus.png");
 
     // Star image for star tile
-    this.load.image("star", "/assets/images/star/star.jpg");
+    this.load.image("star", "/assets/images/star/star.png");
 
     // Procedural bg texture (used by MenuScene)
     this.createBgTexture();
