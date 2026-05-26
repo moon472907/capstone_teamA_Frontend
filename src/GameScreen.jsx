@@ -478,7 +478,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         <div className="board-area">
           <PhaserGame
             selectedCharacter={selectedCharacter}
-            onGameReady={handleGameReady}
+            onBoardReady={handleGameReady}
             onLandmarkClick={handleLandmarkClick}
             onRequireBranchChoice={handleRequireBranchChoice}
             onMoveDone={handleMoveDone}
