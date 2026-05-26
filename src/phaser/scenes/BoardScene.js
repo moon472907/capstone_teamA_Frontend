@@ -673,6 +673,84 @@ export default class BoardScene extends Phaser.Scene {
     }
   }
 
+  // ─────────────────────────────────────────────────────────────
+  //  갈림길: 후보 칸을 반짝이게 + 클릭 가능하게 표시
+  //  tileNumbers: 후보 nodeNumber 배열, onPick: (tileNumber) => void
+  // ─────────────────────────────────────────────────────────────
+  showBranchPicker(tileNumbers, onPick) {
+    this.clearBranchPicker();
+    this._branchPickerItems = [];
+
+    const sc = this.boardManager.mapScale;
+    const r  = Math.max(16, Math.round(24 * sc / 0.5));
+
+    tileNumbers.forEach((num) => {
+      const node = this.boardManager.getNodeById(`node${num}`);
+      if (!node) return;
+
+      // 펄스 글로우 링
+      const glow = this.add.graphics().setDepth(350);
+      glow.lineStyle(3, 0xffdd00, 1);
+      glow.strokeCircle(0, 0, r);
+      glow.fillStyle(0xffdd00, 0.18);
+      glow.fillCircle(0, 0, r);
+      glow.setPosition(node.x, node.y);
+
+      const pulse = this.tweens.add({
+        targets: glow,
+        scaleX: 1.28, scaleY: 1.28,
+        alpha: 0.45,
+        duration: 600,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+
+      // 위쪽 포인터 아이콘 (둥실)
+      const icon = this.add.text(node.x, node.y - r - 14, '👇', {
+        fontSize: `${Math.max(18, Math.round(24 * sc / 0.5))}px`,
+      }).setOrigin(0.5).setDepth(351);
+
+      const iconBob = this.tweens.add({
+        targets: icon,
+        y: node.y - r - 22,
+        duration: 600,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
+      });
+
+      // 클릭 히트존
+      const hit = this.add.circle(node.x, node.y, r + 8, 0x000000, 0)
+        .setDepth(352)
+        .setInteractive({ useHandCursor: true });
+
+      hit.on('pointerover', () => glow.setAlpha(1));
+      hit.on('pointerup', () => {
+        if (this._branchPicked) return;     // 중복 클릭 방지
+        this._branchPicked = true;
+        this.clearBranchPicker();
+        if (onPick) onPick(num);
+      });
+
+      this._branchPickerItems.push({ glow, icon, hit, pulse, iconBob });
+    });
+
+    this._branchPicked = false;
+  }
+
+  clearBranchPicker() {
+    if (!this._branchPickerItems) return;
+    this._branchPickerItems.forEach(({ glow, icon, hit, pulse, iconBob }) => {
+      pulse?.stop();
+      iconBob?.stop();
+      glow.destroy();
+      icon.destroy();
+      hit.destroy();
+    });
+    this._branchPickerItems = [];
+  }
+
   placePlayer(playerId, nodeName) {
     this.playerManager.placePlayer(playerId, nodeName);
   }

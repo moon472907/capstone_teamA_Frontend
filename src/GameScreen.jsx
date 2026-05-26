@@ -284,8 +284,8 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     setBranchOptions(opts.map(n => (typeof n === 'string' ? toTileId(n) : n)));
   };
 
-  // ── 갈림길 선택 ────────────────────────────────────────────
-  const handleBranchSelect = async (tileId) => {
+  // ── 갈림길 선택 (보드 칸 클릭) ─────────────────────────────
+  const handleBranchSelect = useCallback(async (tileId) => {
     setBranchOptions(null);
 
     if (gameId) {
@@ -299,7 +299,19 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
       const scene = getBoardScene();
       if (scene) scene.selectBranch(toNodeId(tileId));
     }
-  };
+  }, [gameId, getBoardScene]);
+
+  // branchOptions가 생기면 보드에서 후보 칸을 클릭 가능하게 표시
+  useEffect(() => {
+    const scene = getBoardScene();
+    if (!scene?.showBranchPicker) return;
+    if (branchOptions?.length) {
+      scene.showBranchPicker(branchOptions, handleBranchSelect);
+    } else {
+      scene.clearBranchPicker();
+    }
+    return () => scene.clearBranchPicker?.();
+  }, [branchOptions, getBoardScene, handleBranchSelect]);
 
   // ── 로컬 모드 턴 넘기기 ────────────────────────────────────
   const doLocalTurnChange = useCallback(() => {
@@ -550,24 +562,10 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         </div>
       )}
 
-      {/* 갈림길 선택 UI */}
-      {branchOptions && (
-        <div className="turn-overlay">
-          <div className="branch-alert">
-            <h2>갈림길 선택!</h2>
-            <p>어느 방향으로 이동하시겠습니까?</p>
-            <div className="branch-btn-group">
-              {branchOptions.map((tileId, idx) => (
-                <button
-                  key={tileId}
-                  className={`branch-btn ${idx === 1 ? 'orange' : ''}`}
-                  onClick={() => handleBranchSelect(tileId)}
-                >
-                  {idx + 1}번 길
-                </button>
-              ))}
-            </div>
-          </div>
+      {/* 갈림길 선택 안내 (실제 선택은 보드 칸 클릭) */}
+      {branchOptions?.length > 0 && (
+        <div className="branch-hint-banner">
+          🔀 갈림길! 반짝이는 칸을 클릭해 이동할 방향을 선택하세요
         </div>
       )}
 
