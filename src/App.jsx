@@ -15,20 +15,24 @@ export const CHARACTERS = [
   { id: 'cat', name: '고양이', icon: '🐱', desc: '캠퍼스 길고양이' },
 ];
 
+// 개발자 모드: URL에 ?dev=true 붙이면 로그인/로비 스킵 (배포 버전에서는 비활성화)
+const DEV_MODE = false;
+
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('loading');
+  const [currentScreen, setCurrentScreen] = useState(DEV_MODE ? 'game' : 'loading');
   const [selectedCharacter, setSelectedCharacter] = useState(CHARACTERS[0]);
-  const [user, setUser] = useState(null);
-  const [currentGameId, setCurrentGameId] = useState(null);
-  const [playerId, setPlayerId] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
+  const [user, setUser] = useState(DEV_MODE ? { nickname: 'DEV_USER', id: 'dev-001' } : null);
+  const [currentGameId, setCurrentGameId] = useState(DEV_MODE ? 'dev-game' : null);
+  const [playerId, setPlayerId] = useState(DEV_MODE ? 'dev-player' : null);
+  const [accessToken, setAccessToken] = useState(DEV_MODE ? 'dev-token' : null);
 
   // BGM 통합 관리
   const [isSoundOn, setIsSoundOn] = useState(true);
   const audioRef = useRef(null);
 
-  // 로그인 상태 확인
+  // 로그인 상태 확인 (개발자 모드에서는 스킵)
   useEffect(() => {
+    if (DEV_MODE) return;
     api.me()
       .then((userData) => {
         setUser(userData);

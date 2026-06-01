@@ -989,12 +989,12 @@ button {
   animation: scaleUpModal 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-family: 'DungGeunMo', sans-serif;
   
-  /* 레트로 청키 픽셀 보더 구현 */
-  border: 6px solid #1a202c;
+  /* 강원대 블루 테마 보더 */
+  border: 6px solid var(--knu-blue-dark);
   box-shadow: 
     inset 4px 4px 0 rgba(255, 255, 255, 0.9),
-    inset -4px -4px 0 rgba(0, 0, 0, 0.08),
-    0 12px 0 rgba(0, 0, 0, 0.2);
+    inset -4px -4px 0 rgba(0, 91, 172, 0.08),
+    0 12px 0 var(--knu-blue-dark);
 }
 
 .building-modal-close {
@@ -1003,7 +1003,7 @@ button {
   right: -16px;
   width: 32px;
   height: 32px;
-  background-color: #1a202c;
+  background-color: var(--knu-blue-dark);
   border: 3px solid #ffffff;
   border-radius: 50%;
   display: flex;
@@ -1014,9 +1014,9 @@ button {
   color: #ffffff;
   cursor: pointer;
   line-height: 1;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 0 rgba(0, 76, 153, 0.4);
   transition: all 0.05s;
-  z-index: 2005; /* 이미지보다 위에 오도록 레이어 순서 지정 */
+  z-index: 2005;
 }
 
 .building-modal-close:hover {
@@ -1034,12 +1034,12 @@ button {
   width: 100%;
   height: 220px;
   overflow: hidden;
-  border: 4px solid #1a202c;
-  background-color: #f7fafc;
+  border: 4px solid var(--knu-blue-dark);
+  background-color: var(--knu-blue-light);
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: inset 4px 4px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: inset 4px 4px 0 rgba(0, 91, 172, 0.08);
   margin-bottom: 20px;
 }
 
@@ -1059,22 +1059,22 @@ button {
 .building-modal-title {
   font-size: 24px;
   font-weight: bold;
-  color: #1a202c;
+  color: var(--knu-blue-dark);
   margin: 0 0 10px 0;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.05);
+  text-shadow: 1px 1px 0 var(--knu-blue-light);
 }
 
 .building-modal-divider {
   width: 60px;
   height: 6px;
-  background-color: var(--knu-orange); /* 강원대 상징 오렌지 옐로 컬러 적용 */
+  background-color: var(--knu-orange);
   margin: 0 auto 16px auto;
-  border: 2px solid #1a202c;
+  border: 2px solid var(--knu-orange-dark);
 }
 
 .building-modal-description {
   font-size: 15px;
-  color: #4a5568;
+  color: var(--knu-blue-dark);
   line-height: 1.6;
   margin: 0;
   text-align: justify;

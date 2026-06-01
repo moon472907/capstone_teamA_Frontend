@@ -44,11 +44,13 @@ export default class BoardManager {
       if (props.next2) nexts.push(props.next2);
 
       this.nodeMap[obj.name] = {
-        id:     obj.name,
-        x:      obj.x * this.mapScale + this.mapOffsetX,
-        y:      obj.y * this.mapScale + this.mapOffsetY,
-        next:   nexts.filter(n => n !== obj.name), // remove self-loops
-        status: props.status || null
+        id:       obj.name,
+        x:        obj.x * this.mapScale + this.mapOffsetX,
+        y:        obj.y * this.mapScale + this.mapOffsetY,
+        next:     nexts.filter(n => n !== obj.name), // remove self-loops
+        status:   props.status || null,
+        tileKind: props.tileKind || props.kind || 'normal',
+        branch:   !!props.branch,
       };
     });
   }
