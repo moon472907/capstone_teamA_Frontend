@@ -236,8 +236,66 @@ export default class BoardScene extends Phaser.Scene {
   }
 
   // pathNodeNames: 도착까지 거쳐가는 노드 이름 배열(시작 제외)
+  // 목적지 1개만 주어지면 directed BFS로 전체 경로를 자동 복원
   movePlayer(playerId, pathNodeNames, onComplete) {
+    if (pathNodeNames.length === 1) {
+      const pawn = this.playerManager.pawns[playerId];
+      const dest = pathNodeNames[0];
+      if (pawn?.nodeName && pawn.nodeName !== dest) {
+        const full = this._directedPath(pawn.nodeName, dest);
+        this.playerManager.animatePath(playerId, full.length ? full : [dest], onComplete);
+        return;
+      }
+    }
     this.playerManager.animatePath(playerId, pathNodeNames, onComplete);
+  }
+
+  // Directed BFS: next 방향만 따라 start→end 최단 경로 반환 (start 제외, end 포함)
+  _directedPath(startId, endId) {
+    if (!this._dirAdj) this._dirAdj = this._buildDirectedAdjacency();
+    if (startId === endId) return [];
+
+    const queue   = [[startId]];
+    const visited = new Set([startId]);
+
+    while (queue.length) {
+      const path = queue.shift();
+      const curr = path[path.length - 1];
+      for (const nb of (this._dirAdj[curr] || [])) {
+        if (nb === endId) return [...path.slice(1), nb];
+        if (!visited.has(nb)) {
+          visited.add(nb);
+          queue.push([...path, nb]);
+        }
+      }
+    }
+    return [endId]; // fallback
+  }
+
+  _buildDirectedAdjacency() {
+    const adj = {};
+    Object.values(this.boardManager.nodeMap).forEach(node => {
+      adj[node.id] = [...node.next];
+    });
+    return adj;
+  }
+
+  // ── 카메라 줌 헬퍼 ───────────────────────────────────────────
+
+  // 해당 플레이어 말 위치로 줌인 (턴 시작 시 호출)
+  zoomToPlayer(playerId, duration = 500) {
+    const pawn = this.playerManager.pawns[playerId];
+    if (!pawn) return;
+    const cam = this.cameras.main;
+    cam.zoomTo(2.2, duration, 'Sine.easeInOut');
+    cam.pan(pawn.sprite.x, pawn.sprite.y, duration, 'Sine.easeInOut');
+  }
+
+  // 전체 맵 기본 뷰로 줌아웃 (이동 시작 시 호출)
+  zoomToDefault(duration = 450) {
+    const cam = this.cameras.main;
+    cam.zoomTo(1.0, duration, 'Sine.easeInOut');
+    cam.pan(this.scale.width / 2, this.scale.height / 2, duration, 'Sine.easeInOut');
   }
 
   // ─────────────────────────────────────────────────────────────
