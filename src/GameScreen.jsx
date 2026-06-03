@@ -197,15 +197,24 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
                 defenseCards: payload.defenseCards ?? p.defenseCards }
             : p));
         }
-        setTileEvent({
-          coinsChange: payload.coinsChange,
-          totalCoins:  payload.totalCoins,
-          starsChange: payload.starsChange,
-          totalStars:  payload.totalStars,
-          description: payload.description,
-          tileType:    payload.tileType
-        });
-        setTimeout(() => setTileEvent(null), 3000);
+        // 일반 칸(이벤트 없음)은 알림 표시 안 함
+        {
+          const EVENT_TILE_TYPES = new Set(['STAR', 'MINIGAME', 'CARD', 'BUS', 'RANDOM_REWARD', 'TRAP']);
+          const isEventTile = EVENT_TILE_TYPES.has(payload.tileType)
+            || (payload.starsChange != null && payload.starsChange !== 0)
+            || (payload.coinsChange != null && payload.coinsChange !== 0);
+          if (isEventTile) {
+            setTileEvent({
+              coinsChange: payload.coinsChange,
+              totalCoins:  payload.totalCoins,
+              starsChange: payload.starsChange,
+              totalStars:  payload.totalStars,
+              description: payload.description,
+              tileType:    payload.tileType
+            });
+            setTimeout(() => setTileEvent(null), 3000);
+          }
+        }
         break;
 
       case WS_EVENTS.CARD_DRAWN:

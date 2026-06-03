@@ -45,8 +45,8 @@ export default class BoardScene extends Phaser.Scene {
     // 줌 컨트롤 초기화
     this._setupZoomControls();
 
-    // 스타 노드 마커 배치
-    this._placeStarMarkers();
+    // 스타 노드 마커 배치 (맵에 떠다니는 별 아이콘 비활성화)
+    // this._placeStarMarkers();
 
     // 건물(랜드마크) 인터랙션 활성화
     this._setupBuildingInteractions();
