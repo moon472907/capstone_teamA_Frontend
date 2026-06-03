@@ -119,9 +119,13 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
   const myPlayerId = (players?.find(p => p.memberId === user?.id)?.playerId) ?? playerId;
   const isMyTurn = !gameId || (displayPlayers[currentPlayerIdx]?.playerId === myPlayerId);
 
-  // WS 콜백에서 최신 myPlayerId를 참조하기 위한 ref (stale closure 방지)
-  const myPlayerIdRef = useRef(myPlayerId);
-  myPlayerIdRef.current = myPlayerId;
+  // WS 콜백에서 최신 값을 참조하기 위한 ref (stale closure 방지)
+  const myPlayerIdRef       = useRef(myPlayerId);
+  myPlayerIdRef.current     = myPlayerId;
+  const displayPlayersRef   = useRef(displayPlayers);
+  displayPlayersRef.current = displayPlayers;
+  const currentPlayerIdxRef = useRef(currentPlayerIdx);
+  currentPlayerIdxRef.current = currentPlayerIdx;
 
   // ── WebSocket 연결 (gameId 있을 때만; 토큰은 createGameSocket이 localStorage 폴백) ──
   useEffect(() => {
@@ -151,14 +155,28 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
   // ── WebSocket 이벤트 핸들러 ────────────────────────────────
   const handleWebSocketEvent = useCallback((type, payload) => {
     switch (type) {
-      case WS_EVENTS.DICE_ROLLED:
+      case WS_EVENTS.DICE_ROLLED: {
         getBoardScene()?.showDiceAnimation(payload.diceValue);
+        // 굴리는 플레이어 위치로 줌인 (자신이든 상대든)
+        const rollingId = payload.playerId
+          ?? displayPlayersRef.current[currentPlayerIdxRef.current]?.playerId;
+        if (rollingId) getBoardScene()?.zoomToPlayer(rollingId);
         break;
+      }
 
       case WS_EVENTS.PLAYER_MOVED: {
-        // 서버는 nodeNumber(1~53)를 보냄 → 해당 playerId의 말을 그 노드로 이동
-        const n = payload.nodeNumber ?? payload.tileIndex ?? payload.toTileId;
-        getBoardScene()?.movePlayer(payload.playerId, [toNodeId(n)]);
+        // 서버는 nodeNumber(1~53)를 보냄 → directed BFS로 전체 경로 복원 후 hop 이동
+        const n    = payload.nodeNumber ?? payload.tileIndex ?? payload.toTileId;
+        const scene = getBoardScene();
+        if (!scene) break;
+        if (payload.playerId === myPlayerIdRef.current) {
+          // 내 이동: 줌아웃으로 전체 경로 확인
+          scene.zoomToDefault();
+        } else {
+          // 상대 이동: 줌인으로 이동 감상
+          scene.zoomToPlayer(payload.playerId);
+        }
+        scene.movePlayer(payload.playerId, [toNodeId(n)]);
         break;
       }
 
@@ -231,14 +249,22 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         setTimeout(() => setShowNotification(false), 1800);
         break;
 
-      case WS_EVENTS.TURN_CHANGED:
-        setCurrentPlayerIdx(payload.currentPlayerIndex);
+      case WS_EVENTS.TURN_CHANGED: {
+        const nextIdx = payload.currentPlayerIndex;
+        setCurrentPlayerIdx(nextIdx);
         setTurn(payload.round);
         setIsRolling(false);
         setNextPlayerName(payload.currentPlayerNickname);
         setShowNotification(true);
         setTimeout(() => setShowNotification(false), 2000);
+        // 알림이 끝난 뒤 새 턴 플레이어 위치로 줌인
+        setTimeout(() => {
+          const scene = getBoardScene();
+          const activeId = displayPlayersRef.current[nextIdx]?.playerId;
+          if (scene && activeId) scene.zoomToPlayer(activeId);
+        }, 2200);
         break;
+      }
 
       case WS_EVENTS.GAME_ENDED:
         setGameResult(payload.results);
