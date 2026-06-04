@@ -22,6 +22,7 @@ function App() {
   const [currentGameId, setCurrentGameId] = useState(null);
   const [playerId, setPlayerId] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // BGM 통합 관리
   const [isSoundOn, setIsSoundOn] = useState(true);
@@ -67,6 +68,11 @@ function App() {
     setCurrentScreen('menu');
   };
 
+  const handleAdminLogin = () => {
+    setIsAdmin(true);
+    setCurrentScreen('game');
+  };
+
   const handleJoinRoom = ({ gameId: gId, playerId: pId } = {}) => {
     if (gId) setCurrentGameId(gId);
     if (pId) setPlayerId(pId);
@@ -94,6 +100,7 @@ function App() {
       {currentScreen === 'login' && (
         <LoginScreen
           onLogin={handleLogin}
+          onAdminLogin={handleAdminLogin}
           isSoundOn={isSoundOn}
           onToggleSound={() => setIsSoundOn(v => !v)}
         />
@@ -122,7 +129,14 @@ function App() {
       )}
       {currentScreen === 'game' && (
         <GameScreen
-          onGoBack={() => setCurrentScreen('menu')}
+          onGoBack={() => {
+            if (isAdmin) {
+              setIsAdmin(false);
+              setCurrentScreen('login');
+            } else {
+              setCurrentScreen('menu');
+            }
+          }}
           selectedCharacter={selectedCharacter}
           gameId={currentGameId}
           playerId={playerId}

@@ -96,6 +96,15 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     return phaserGameRef.current?.scene?.getScene('BoardScene') ?? null;
   }, []);
 
+  // 어드민/로컬 모드: 씬 준비 후 로컬 플레이어 생성
+  useEffect(() => {
+    if (gameId || !sceneReady || boardInitedRef.current) return;
+    const scene = getBoardScene();
+    if (!scene) return;
+    scene.initLocalPlayer(user?.name || '관리자');
+    boardInitedRef.current = true;
+  }, [gameId, sceneReady, getBoardScene, user]);
+
   // 서버 플레이어로 보드 말 생성 (씬 준비 + 플레이어 로드 후 1회)
   useEffect(() => {
     if (!gameId || !sceneReady || boardInitedRef.current || !players?.length) return;

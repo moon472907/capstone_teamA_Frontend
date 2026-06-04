@@ -201,15 +201,27 @@ export default class BoardScene extends Phaser.Scene {
     });
   }
 
-  // 로컬/데모 모드 주사위 굴리기
-  startDiceRoll(result) {
-    if (this.gameManager.isAnimating) return;
-    this.gameManager.isAnimating = true;
-    const diceValue = result || this.diceManager.roll();
-    const sprite = this.playerManager.playerSprites[0]?.sprite;
-    if (sprite) {
-      this.diceResultText.setPosition(sprite.x, sprite.y - 70);
+  // ─────────────────────────────────────────────────────────────
+  //  어드민/로컬 모드 전용
+  // ─────────────────────────────────────────────────────────────
+
+  // 로컬 플레이어 생성 (node1 시작)
+  initLocalPlayer(nickname = '관리자') {
+    this._local = { nodeId: 'node1', isAnimating: false };
+    this.initPlayers([{ playerId: 'local', nodeName: 'node1', nickname }]);
+  }
+
+  // 로컬 주사위 굴리기
+  startDiceRoll() {
+    if (!this._local || this._local.isAnimating) return;
+    this._local.isAnimating = true;
+
+    const diceValue = Phaser.Math.Between(1, 6);
+    const pawn = this.playerManager.pawns['local'];
+    if (pawn) {
+      this.diceResultText.setPosition(pawn.sprite.x, pawn.sprite.y - 70);
     }
+
     this.diceResultText.setVisible(true).setScale(1).setText('?');
     let count = 0;
     this.time.addEvent({
@@ -227,11 +239,51 @@ export default class BoardScene extends Phaser.Scene {
             onComplete: () => {
               this.time.delayedCall(400, () => {
                 this.diceResultText.setVisible(false);
+                this._doLocalMove(this._local.nodeId, diceValue);
               });
             },
           });
         }
       },
+    });
+  }
+
+  // 로컬 이동: 1칸씩 hop, 분기점에서 React 선택 요청
+  _doLocalMove(fromId, stepsLeft) {
+    if (stepsLeft <= 0) {
+      this._local.isAnimating = false;
+      const node = this.boardManager.getNodeById(this._local.nodeId);
+      this.game.events.emit('moveDone', {
+        isWin: node?.status === 'finish',
+        nodeId: this._local.nodeId,
+      });
+      return;
+    }
+
+    const node = this.boardManager.getNodeById(fromId);
+    if (!node || node.next.length === 0) {
+      this._local.isAnimating = false;
+      this.game.events.emit('moveDone', { isWin: false, nodeId: this._local.nodeId });
+      return;
+    }
+
+    if (node.next.length > 1) {
+      // 분기점: React에 선택 UI 요청 후 콜백 대기
+      const nums = node.next.map(n => parseInt(n.replace('node', ''), 10));
+      this._pendingBranchCallback = (chosenNodeId) => {
+        this.movePlayer('local', [chosenNodeId], () => {
+          this._local.nodeId = chosenNodeId;
+          this._doLocalMove(chosenNodeId, stepsLeft - 1);
+        });
+      };
+      this.game.events.emit('requireBranchChoice', nums, fromId);
+      return;
+    }
+
+    const nextId = node.next[0];
+    this.movePlayer('local', [nextId], () => {
+      this._local.nodeId = nextId;
+      this._doLocalMove(nextId, stepsLeft - 1);
     });
   }
 
@@ -369,16 +421,20 @@ export default class BoardScene extends Phaser.Scene {
   // ─────────────────────────────────────────────────────────────
 
   executeBusRide(targetNodeId, onComplete) {
-    const player = this.gameManager.players[0];
-    const { sprite, shadow } = this.playerManager.playerSprites[0];
+    // 로컬 모드: 'local' 플레이어, 서버 모드: 첫 번째 pawn
+    const playerId = this._local ? 'local' : Object.keys(this.playerManager.pawns)[0];
+    const pawn = this.playerManager.pawns[playerId];
+    if (!pawn) { if (onComplete) onComplete(); return; }
+
+    const fromNodeId = pawn.nodeName;
 
     // BFS로 최단 경로(엣지 기준) 계산
-    const path = this._bfsPath(player.currentNodeId, targetNodeId);
+    const path = this._bfsPath(fromNodeId, targetNodeId);
     if (path.length < 2) { if (onComplete) onComplete(); return; }
 
     // 플레이어 숨기기
-    sprite.setVisible(false);
-    shadow.setVisible(false);
+    pawn.sprite.setVisible(false);
+    pawn.shadow.setVisible(false);
 
     // 출발 노드에 버스 배치
     const startNode = this.boardManager.getNodeById(path[0]);
@@ -395,11 +451,14 @@ export default class BoardScene extends Phaser.Scene {
         // 목적지 도착
         bus.destroy();
         const dest = this.boardManager.getNodeById(targetNodeId);
-        sprite.setPosition(dest.x, dest.y).setVisible(true);
-        shadow.setPosition(dest.x, dest.y + 8).setVisible(true);
-        sprite.play('player_idle');
-        player.currentNodeId = targetNodeId;
-        this.gameManager.isAnimating = false;
+        const ox = pawn.offset?.x ?? 0;
+        const oy = pawn.offset?.y ?? 0;
+        pawn.sprite.setPosition(dest.x + ox, dest.y + oy).setVisible(true);
+        pawn.shadow.setPosition(dest.x + ox, dest.y + oy + 8).setVisible(true);
+        pawn.label?.setPosition(dest.x + ox, dest.y + oy - 46);
+        pawn.sprite.play('player_idle');
+        pawn.nodeName = targetNodeId;
+        if (this._local) this._local.nodeId = targetNodeId;
         if (onComplete) onComplete();
         return;
       }

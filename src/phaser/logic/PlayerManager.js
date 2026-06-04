@@ -1,4 +1,4 @@
-const SPRITE_SCALE = 0.45;
+const SPRITE_SCALE = 0.07;
 
 // 같은 타일에 여러 말이 겹치지 않도록 플레이어별 픽셀 오프셋
 const OFFSETS = [
@@ -22,8 +22,8 @@ export default class PlayerManager {
     if (!this.scene.anims.exists('player_idle')) {
       this.scene.anims.create({
         key: 'player_idle',
-        frames: this.scene.anims.generateFrameNumbers('player_idle', { start: 0, end: 8 }),
-        frameRate: 8,
+        frames: this.scene.anims.generateFrameNumbers('player_idle', { start: 0, end: 5 }),
+        frameRate: 6,
         repeat: -1,
       });
     }

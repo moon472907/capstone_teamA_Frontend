@@ -26,11 +26,13 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image("map", "/assets/images/map.png");
     this.load.json("mapData", "/assets/map_data.json");
 
-    // Character spritesheets  (112×96 per frame, 9 frames)
-    this.load.spritesheet("player_idle", "/assets/images/characters/player1.png",
-      { frameWidth: 112, frameHeight: 96 });
-    this.load.spritesheet("player_run",  "/assets/images/characters/player1_run.png",
-      { frameWidth: 112, frameHeight: 96 });
+    // Character spritesheets
+    // idle: 3×2 grid (672×1053 per frame, 6 frames)
+    this.load.spritesheet("player_idle", "/assets/images/characters/playerduri1_idle.png",
+      { frameWidth: 672, frameHeight: 1053 });
+    // run: 3×3 grid (672×702 per frame, 9 frames)
+    this.load.spritesheet("player_run",  "/assets/images/characters/playerduri1_run.png",
+      { frameWidth: 672, frameHeight: 702 });
 
     // Bus image for 두리버스 animation
     this.load.image("bus", "/assets/images/bus'/bus.png");
