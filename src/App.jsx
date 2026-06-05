@@ -5,15 +5,10 @@ import Lobby from './Lobby';
 import GameScreen from './GameScreen';
 import LoginScreen from './LoginScreen';
 import { api, getToken } from './api';
+import { CHARACTERS } from './data/characters';
 
-export const CHARACTERS = [
-  { id: 'gomduri', name: '곰두리', icon: '🐻‍❄️', desc: '강원대 대표 마스코트' },
-  { id: 'narae', name: '나래', icon: '🕊️', desc: '하늘을 나는 비둘기' },
-  { id: 'daramji', name: '다람쥐', icon: '🐿️', desc: '캠퍼스 다람쥐' },
-  { id: 'bunny', name: '토끼', icon: '🐰', desc: '춘천 옥토끼' },
-  { id: 'fox', name: '여우', icon: '🦊', desc: '영리한 산여우' },
-  { id: 'cat', name: '고양이', icon: '🐱', desc: '캠퍼스 길고양이' },
-];
+// 로스터 단일 소스는 src/data/characters.js (서버 characterKey 유지 + 새 에셋 입힘)
+export { CHARACTERS };
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('loading');

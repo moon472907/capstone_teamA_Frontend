@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { CHARACTER_MANIFEST } from '../../data/characters';
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
     super({ key: "PreloadScene" });
@@ -26,13 +27,15 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image("map", "/assets/images/map.png");
     this.load.json("mapData", "/assets/map_data.json");
 
-    // Character spritesheets
-    // idle: 3×2 grid (672×1053 per frame, 6 frames)
-    this.load.spritesheet("player_idle", "/assets/images/characters/playerduri1_idle.png",
-      { frameWidth: 672, frameHeight: 1053 });
-    // run: 3×3 grid (672×702 per frame, 9 frames)
-    this.load.spritesheet("player_run",  "/assets/images/characters/playerduri1_run.png",
-      { frameWidth: 672, frameHeight: 702 });
+    // 캐릭터 스프라이트시트 — 매니페스트(characterManifest.json) 기반으로
+    // 모든 캐릭터의 idle/run 을 균일 가로 스트립으로 로드한다.
+    // 텍스처 키: `${assetKey}_idle`, `${assetKey}_run`
+    Object.values(CHARACTER_MANIFEST).forEach((c) => {
+      this.load.spritesheet(`${c.key}_idle`, c.idle.sheet,
+        { frameWidth: c.idle.frameWidth, frameHeight: c.idle.frameHeight });
+      this.load.spritesheet(`${c.key}_run`, c.run.sheet,
+        { frameWidth: c.run.frameWidth, frameHeight: c.run.frameHeight });
+    });
 
     // Bus image for 두리버스 animation
     this.load.image("bus", "/assets/images/bus'/bus.png");

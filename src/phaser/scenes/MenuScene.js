@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { CHARACTER_MANIFEST } from '../../data/characters';
 export default class MenuScene extends Phaser.Scene {
   constructor() { super({ key: "MenuScene" }); }
 
@@ -75,14 +76,16 @@ export default class MenuScene extends Phaser.Scene {
     charShadow.fillStyle(0x000000, 0.28);
     charShadow.fillEllipse(W / 2, 316, 72, 18);
 
-    const charSprite = this.add.sprite(W / 2, 280, "player_idle")
-      .setScale(0.72)
-      .setOrigin(0.5, 0.85);
+    const defKey = Object.keys(CHARACTER_MANIFEST)[0];
+    const defChar = CHARACTER_MANIFEST[defKey];
+    const charSprite = this.add.sprite(W / 2, 300, `${defKey}_idle`)
+      .setScale(180 / defChar.idle.frameHeight)
+      .setOrigin(0.5, 0.92);
 
     if (!this.anims.exists("menu_idle")) {
       this.anims.create({
         key: "menu_idle",
-        frames: this.anims.generateFrameNumbers("player_idle", { start: 0, end: 8 }),
+        frames: this.anims.generateFrameNumbers(`${defKey}_idle`, { start: 0, end: defChar.idle.frames - 1 }),
         frameRate: 7, repeat: -1
       });
     }

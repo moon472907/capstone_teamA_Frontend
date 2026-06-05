@@ -124,10 +124,10 @@ export default class BoardScene extends Phaser.Scene {
 
   // ── React → Phaser bridge ──────────────────────────────
 
-  // players: [{ playerId, nodeName, nickname }]
+  // players: [{ playerId, nodeName, nickname, characterKey }]
   initPlayers(players) {
     players.forEach((p, i) => {
-      this.playerManager.createPlayer(p.playerId, p.nodeName, p.nickname, i);
+      this.playerManager.createPlayer(p.playerId, p.nodeName, p.nickname, i, p.characterKey);
     });
   }
 
@@ -206,9 +206,9 @@ export default class BoardScene extends Phaser.Scene {
   // ─────────────────────────────────────────────────────────────
 
   // 로컬 플레이어 생성 (node1 시작)
-  initLocalPlayer(nickname = '관리자') {
+  initLocalPlayer(nickname = '관리자', characterKey) {
     this._local = { nodeId: 'node1', isAnimating: false };
-    this.initPlayers([{ playerId: 'local', nodeName: 'node1', nickname }]);
+    this.initPlayers([{ playerId: 'local', nodeName: 'node1', nickname, characterKey }]);
   }
 
   // 로컬 주사위 굴리기
@@ -456,7 +456,7 @@ export default class BoardScene extends Phaser.Scene {
         pawn.sprite.setPosition(dest.x + ox, dest.y + oy).setVisible(true);
         pawn.shadow.setPosition(dest.x + ox, dest.y + oy + 8).setVisible(true);
         pawn.label?.setPosition(dest.x + ox, dest.y + oy - 46);
-        pawn.sprite.play('player_idle');
+        this.playerManager._playIdle(pawn);
         pawn.nodeName = targetNodeId;
         if (this._local) this._local.nodeId = targetNodeId;
         if (onComplete) onComplete();

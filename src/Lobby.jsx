@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Lobby.css';
 import { CHARACTERS } from './App';
+import { iconFor } from './data/characters';
 import { api } from './api';
 import { createGameSocket, WS_EVENTS } from './services/websocket';
-
-const charIcon = (key) => CHARACTERS.find((c) => c.id === key)?.icon ?? '🎮';
 
 function Lobby({ onJoinRoom, onGoBack, selectedCharacter, setSelectedCharacter, user }) {
   const [roomList, setRoomList] = useState([]);
@@ -177,7 +176,9 @@ function Lobby({ onJoinRoom, onGoBack, selectedCharacter, setSelectedCharacter, 
         slots.push(
           <div key={`slot-${p.playerId}`} className="player-slot occupied pop-in">
             {isRoomHost && <div className="slot-master-badge">👑 방장</div>}
-            <div className="slot-avatar">{charIcon(p.characterKey)}</div>
+            <div className="slot-avatar">
+              <img src={iconFor(p.characterKey)} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            </div>
             <div className="slot-info">
               <span className="slot-name">{p.nickname}{isMe ? ' (나)' : ''}</span>
               {p.ready ? (
@@ -314,7 +315,9 @@ function Lobby({ onJoinRoom, onGoBack, selectedCharacter, setSelectedCharacter, 
               <h3 className="picker-title">캐릭터 선택</h3>
 
               <div className="picker-preview">
-                <span className="preview-icon">{selectedCharacter.icon}</span>
+                <span className="preview-icon">
+                  <img src={selectedCharacter.icon} alt={selectedCharacter.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </span>
                 <span className="preview-name">{selectedCharacter.name}</span>
                 <span className="preview-desc">{selectedCharacter.desc}</span>
               </div>
@@ -327,7 +330,9 @@ function Lobby({ onJoinRoom, onGoBack, selectedCharacter, setSelectedCharacter, 
                     onClick={() => setSelectedCharacter(char)}
                     title={char.name}
                   >
-                    <span className="picker-item-icon">{char.icon}</span>
+                    <span className="picker-item-icon">
+                      <img src={char.icon} alt={char.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    </span>
                     <span className="picker-item-name">{char.name}</span>
                   </button>
                 ))}
