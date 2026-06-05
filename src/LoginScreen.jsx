@@ -3,13 +3,16 @@ import { api } from './api';
 import './LoginScreen.css';
 import './MainMenu.css'; // 메인메뉴의 타이틀, 구름, 별 스타일 재사용
 
-function LoginScreen({ onLogin, isSoundOn, onToggleSound }) {
+const ADMIN_PASSWORD = '1234';
+
+function LoginScreen({ onLogin, onAdminLogin, isSoundOn, onToggleSound }) {
   const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [adminPw, setAdminPw] = useState('');
 
   // 반짝이는 별 데이터 생성 (메인메뉴와 동일하게 적용하여 자연스러운 화면 연결)
   const stars = Array.from({ length: 12 }, (_, i) => ({
@@ -83,31 +86,62 @@ function LoginScreen({ onLogin, isSoundOn, onToggleSound }) {
         </h1>
 
         <div className="login-card">
-          {/* 로그인 / 회원가입 탭 */}
+          {/* 로그인 / 회원가입 / 관리자 탭 */}
           <div className="login-tabs">
             <button
               type="button"
               className={`login-tab-btn ${mode === 'login' ? 'active' : ''}`}
-              onClick={() => {
-                setMode('login');
-                setError('');
-              }}
+              onClick={() => { setMode('login'); setError(''); }}
             >
               로그인
             </button>
             <button
               type="button"
               className={`login-tab-btn ${mode === 'signup' ? 'active' : ''}`}
-              onClick={() => {
-                setMode('signup');
-                setError('');
-              }}
+              onClick={() => { setMode('signup'); setError(''); }}
             >
               회원가입
             </button>
+            <button
+              type="button"
+              className={`login-tab-btn ${mode === 'admin' ? 'active' : ''}`}
+              onClick={() => { setMode('admin'); setError(''); setAdminPw(''); }}
+            >
+              🔧 관리자
+            </button>
           </div>
 
-          {/* 폼 입력 영역 */}
+          {/* 관리자 모드 폼 */}
+          {mode === 'admin' ? (
+            <form
+              className="login-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (adminPw === ADMIN_PASSWORD) {
+                  onAdminLogin();
+                } else {
+                  setError('비밀번호가 틀렸습니다.');
+                }
+              }}
+            >
+              <div className="login-input-group">
+                <label className="login-input-label">관리자 비밀번호</label>
+                <input
+                  type="password"
+                  placeholder="••••"
+                  value={adminPw}
+                  onChange={(e) => { setAdminPw(e.target.value); setError(''); }}
+                  autoFocus
+                  className="login-input"
+                />
+              </div>
+              {error && <p className="login-error">{error}</p>}
+              <button type="submit" className="login-submit-btn admin-submit-btn">
+                🎮 게임 바로 시작
+              </button>
+            </form>
+          ) : (
+          /* 일반 로그인 / 회원가입 폼 */
           <form onSubmit={handleSubmit} className="login-form">
             {mode === 'signup' && (
               <div className="login-input-group">
@@ -154,6 +188,7 @@ function LoginScreen({ onLogin, isSoundOn, onToggleSound }) {
               {loading ? '처리 중...' : mode === 'login' ? '강대마블 로그인' : '강대마블 회원가입'}
             </button>
           </form>
+          )}
         </div>
       </div>
     </div>

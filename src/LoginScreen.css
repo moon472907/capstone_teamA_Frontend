@@ -147,3 +147,18 @@
   transform: translateY(4px);
   box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
+
+
+.admin-submit-btn {
+  background: linear-gradient(180deg, #48BB78 0%, #2F855A 100%);
+  box-shadow:
+    inset 4px 4px 0 rgba(255,255,255,0.3),
+    inset -4px -4px 0 rgba(0,0,0,0.15),
+    0 6px 0 #1C6B3A;
+  text-shadow: 1.5px 1.5px 0 #1C6B3A;
+}
+
+.admin-submit-btn:not(:disabled):active {
+  transform: translateY(5px);
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.2);
+}

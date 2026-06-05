@@ -7,6 +7,17 @@ import {
 } from './services/api';
 import { createGameSocket, WS_EVENTS } from './services/websocket';
 import { EVENT_NODES, EVENT_TYPE_LABEL, pickRandomEvent } from './data/kangwonEvents';
+import { iconFor } from './data/characters';
+
+// 뱃지 아이콘 렌더: 캐릭터 이미지(URL)면 <img>, 이모지면 텍스트
+const isImgIcon = (v) => typeof v === 'string' && v.startsWith('/');
+function BadgeIcon({ player }) {
+  const v = player.icon ?? (player.characterKey ? iconFor(player.characterKey) : null);
+  if (isImgIcon(v)) {
+    return <img src={v} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />;
+  }
+  return <span>{v ?? '🎮'}</span>;
+}
 
 // 서버 카드(cardKey/cardType/title/description) → 화면 표시용 변환
 const CARD_EMOJI = {
@@ -15,10 +26,6 @@ const CARD_EMOJI = {
 };
 const CARD_TYPE_TO_KIND = { ATTACK: 'attack', DEFENSE: 'defense', SCHOLARSHIP: 'scholarship' };
 
-// 서버 플레이어의 characterKey → 이모지 (뱃지 표시용)
-const CHAR_ICON = {
-  gomduri: '🐻‍❄️', narae: '🕊️', daramji: '🐿️', bunny: '🐰', fox: '🦊', cat: '🐱',
-};
 const serverCardToDisplay = (p) => ({
   type: CARD_TYPE_TO_KIND[p.cardType] || 'attack',
   emoji: CARD_EMOJI[p.cardKey] || '🎴',
@@ -96,6 +103,15 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
     return phaserGameRef.current?.scene?.getScene('BoardScene') ?? null;
   }, []);
 
+  // 어드민/로컬 모드: 씬 준비 후 로컬 플레이어 생성
+  useEffect(() => {
+    if (gameId || !sceneReady || boardInitedRef.current) return;
+    const scene = getBoardScene();
+    if (!scene) return;
+    scene.initLocalPlayer(user?.name || '관리자', selectedCharacter?.id);
+    boardInitedRef.current = true;
+  }, [gameId, sceneReady, getBoardScene, user, selectedCharacter]);
+
   // 서버 플레이어로 보드 말 생성 (씬 준비 + 플레이어 로드 후 1회)
   useEffect(() => {
     if (!gameId || !sceneReady || boardInitedRef.current || !players?.length) return;
@@ -105,6 +121,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
       playerId: p.playerId,
       nodeName: toNodeId(p.tileNumber ?? p.tileId ?? 1),
       nickname: p.nickname,
+      characterKey: p.characterKey,
     })));
     boardInitedRef.current = true;
   }, [gameId, sceneReady, players, getBoardScene]);
@@ -549,7 +566,7 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
         {displayPlayers.map((player, idx) => (
           <div key={player.playerId ?? idx} className={`player-badge ${idx === currentPlayerIdx ? 'active' : ''}`}>
             <div className="badge-icon" style={{ backgroundColor: player.color ?? '#85CDEE' }}>
-              {player.icon ?? CHAR_ICON[player.characterKey] ?? '🎮'}
+              <BadgeIcon player={player} />
             </div>
             <div className="badge-info">
               <span className="badge-name">{player.nickname ?? player.name}</span>

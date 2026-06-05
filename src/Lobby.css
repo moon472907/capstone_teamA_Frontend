@@ -310,7 +310,11 @@
 }
 
 .preview-icon {
-  font-size: 48px;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .preview-name {
@@ -367,7 +371,11 @@
 }
 
 .picker-item-icon {
-  font-size: 28px;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .picker-item-name {

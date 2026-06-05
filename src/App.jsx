@@ -5,15 +5,10 @@ import Lobby from './Lobby';
 import GameScreen from './GameScreen';
 import LoginScreen from './LoginScreen';
 import { api, getToken } from './api';
+import { CHARACTERS } from './data/characters';
 
-export const CHARACTERS = [
-  { id: 'gomduri', name: '곰두리', icon: '🐻‍❄️', desc: '강원대 대표 마스코트' },
-  { id: 'narae', name: '나래', icon: '🕊️', desc: '하늘을 나는 비둘기' },
-  { id: 'daramji', name: '다람쥐', icon: '🐿️', desc: '캠퍼스 다람쥐' },
-  { id: 'bunny', name: '토끼', icon: '🐰', desc: '춘천 옥토끼' },
-  { id: 'fox', name: '여우', icon: '🦊', desc: '영리한 산여우' },
-  { id: 'cat', name: '고양이', icon: '🐱', desc: '캠퍼스 길고양이' },
-];
+// 로스터 단일 소스는 src/data/characters.js (서버 characterKey 유지 + 새 에셋 입힘)
+export { CHARACTERS };
 
 // 개발자 모드: URL에 ?dev=true 붙이면 로그인/로비 스킵 (배포 버전에서는 비활성화)
 const DEV_MODE = false;
@@ -25,6 +20,7 @@ function App() {
   const [currentGameId, setCurrentGameId] = useState(DEV_MODE ? 'dev-game' : null);
   const [playerId, setPlayerId] = useState(DEV_MODE ? 'dev-player' : null);
   const [accessToken, setAccessToken] = useState(DEV_MODE ? 'dev-token' : null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // BGM 통합 관리
   const [isSoundOn, setIsSoundOn] = useState(true);
@@ -71,6 +67,11 @@ function App() {
     setCurrentScreen('menu');
   };
 
+  const handleAdminLogin = () => {
+    setIsAdmin(true);
+    setCurrentScreen('game');
+  };
+
   const handleJoinRoom = ({ gameId: gId, playerId: pId } = {}) => {
     if (gId) setCurrentGameId(gId);
     if (pId) setPlayerId(pId);
@@ -98,6 +99,7 @@ function App() {
       {currentScreen === 'login' && (
         <LoginScreen
           onLogin={handleLogin}
+          onAdminLogin={handleAdminLogin}
           isSoundOn={isSoundOn}
           onToggleSound={() => setIsSoundOn(v => !v)}
         />
@@ -126,7 +128,14 @@ function App() {
       )}
       {currentScreen === 'game' && (
         <GameScreen
-          onGoBack={() => setCurrentScreen('menu')}
+          onGoBack={() => {
+            if (isAdmin) {
+              setIsAdmin(false);
+              setCurrentScreen('login');
+            } else {
+              setCurrentScreen('menu');
+            }
+          }}
           selectedCharacter={selectedCharacter}
           gameId={currentGameId}
           playerId={playerId}

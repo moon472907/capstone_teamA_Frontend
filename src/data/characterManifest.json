@@ -1,0 +1,104 @@
+{
+  "agriculture_duri": {
+    "key": "agriculture_duri",
+    "name": "농학두리",
+    "icon": "/assets/images/characters/agriculture_duri/icon.png",
+    "idle": {
+      "sheet": "/assets/images/characters/agriculture_duri/idle.png",
+      "frameWidth": 536,
+      "frameHeight": 638,
+      "frames": 9
+    },
+    "run": {
+      "sheet": "/assets/images/characters/agriculture_duri/run.png",
+      "frameWidth": 533,
+      "frameHeight": 641,
+      "frames": 9
+    }
+  },
+  "graduate_duri": {
+    "key": "graduate_duri",
+    "name": "졸업두리",
+    "icon": "/assets/images/characters/graduate_duri/icon.png",
+    "idle": {
+      "sheet": "/assets/images/characters/graduate_duri/idle.png",
+      "frameWidth": 628,
+      "frameHeight": 819,
+      "frames": 6
+    },
+    "run": {
+      "sheet": "/assets/images/characters/graduate_duri/run.png",
+      "frameWidth": 574,
+      "frameHeight": 639,
+      "frames": 7
+    }
+  },
+  "gym_duri": {
+    "key": "gym_duri",
+    "name": "헬스두리",
+    "icon": "/assets/images/characters/gym_duri/icon.png",
+    "idle": {
+      "sheet": "/assets/images/characters/gym_duri/idle.png",
+      "frameWidth": 371,
+      "frameHeight": 624,
+      "frames": 9
+    },
+    "run": {
+      "sheet": "/assets/images/characters/gym_duri/run.png",
+      "frameWidth": 380,
+      "frameHeight": 628,
+      "frames": 9
+    }
+  },
+  "laboratory_duri": {
+    "key": "laboratory_duri",
+    "name": "연구두리",
+    "icon": "/assets/images/characters/laboratory_duri/icon.png",
+    "idle": {
+      "sheet": "/assets/images/characters/laboratory_duri/idle.png",
+      "frameWidth": 141,
+      "frameHeight": 221,
+      "frames": 7
+    },
+    "run": {
+      "sheet": "/assets/images/characters/laboratory_duri/run.png",
+      "frameWidth": 89,
+      "frameHeight": 144,
+      "frames": 9
+    }
+  },
+  "medical_duri": {
+    "key": "medical_duri",
+    "name": "의학두리",
+    "icon": "/assets/images/characters/medical_duri/icon.png",
+    "idle": {
+      "sheet": "/assets/images/characters/medical_duri/idle.png",
+      "frameWidth": 378,
+      "frameHeight": 624,
+      "frames": 9
+    },
+    "run": {
+      "sheet": "/assets/images/characters/medical_duri/run.png",
+      "frameWidth": 547,
+      "frameHeight": 638,
+      "frames": 9
+    }
+  },
+  "nurse_duri": {
+    "key": "nurse_duri",
+    "name": "간호두리",
+    "icon": "/assets/images/characters/nurse_duri/icon.png",
+    "idle": {
+      "sheet": "/assets/images/characters/nurse_duri/idle.png",
+      "frameWidth": 267,
+      "frameHeight": 433,
+      "frames": 7
+    },
+    "run": {
+      "sheet": "/assets/images/characters/nurse_duri/run.png",
+      "frameWidth": 169,
+      "frameHeight": 274,
+      "frames": 9
+    }
+  }
+}
