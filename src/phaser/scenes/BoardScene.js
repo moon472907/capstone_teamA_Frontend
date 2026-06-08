@@ -26,7 +26,7 @@ export default class BoardScene extends Phaser.Scene {
     }).setOrigin(0.5).setDepth(1000).setVisible(false);
 
     // 줌 힌트 텍스트
-    const hint = this.add.text(centerX, 24, "🖱 스크롤: 줌인/줌아웃  |  드래그: 이동  |  더블클릭: 전체 보기", {
+    const hint = this.add.text(this.scale.width / 2, 24, "🖱 스크롤: 줌인/줌아웃  |  드래그: 이동  |  더블클릭: 전체 보기", {
       fontSize: "13px",
       fontFamily: "DungGeunMo",
       color: "#ffffff",
