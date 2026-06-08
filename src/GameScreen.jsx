@@ -173,10 +173,10 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
   const handleWebSocketEvent = useCallback((type, payload) => {
     switch (type) {
       case WS_EVENTS.DICE_ROLLED: {
-        getBoardScene()?.showDiceAnimation(payload.diceValue);
         // 굴리는 플레이어 위치로 줌인 (자신이든 상대든)
         const rollingId = payload.playerId
           ?? displayPlayersRef.current[currentPlayerIdxRef.current]?.playerId;
+        getBoardScene()?.showDiceAnimation(payload.diceValue, rollingId);
         if (rollingId) getBoardScene()?.zoomToPlayer(rollingId);
         break;
       }
