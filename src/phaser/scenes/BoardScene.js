@@ -15,18 +15,15 @@ export default class BoardScene extends Phaser.Scene {
     this.boardManager.createBoard();
     this.playerManager = new PlayerManager(this, this.boardManager);
 
-    // 주사위 애니메이션용 텍스트
-    const centerX = this.scale.width / 2;
-    const bottomY = this.scale.height - 160;
-
-    this.diceResultText = this.add.text(centerX, bottomY, '', {
+    // 주사위 애니메이션용 텍스트 (월드 좌표 기준 - 굴리는 캐릭터 머리 위에 표시되어야 하므로 화면 고정 X)
+    this.diceResultText = this.add.text(0, 0, '', {
       fontSize: '80px',
       fontFamily: 'DungGeunMo',
       color: '#ffca28',
       stroke: '#003d73',
       strokeThickness: 8,
       shadow: { offsetX: 4, offsetY: 4, color: '#000000', blur: 0, fill: true },
-    }).setOrigin(0.5).setDepth(1000).setScrollFactor(0).setVisible(false);
+    }).setOrigin(0.5).setDepth(1000).setVisible(false);
 
     // 줌 힌트 텍스트
     const hint = this.add.text(centerX, 24, "🖱 스크롤: 줌인/줌아웃  |  드래그: 이동  |  더블클릭: 전체 보기", {
@@ -159,9 +156,16 @@ export default class BoardScene extends Phaser.Scene {
     });
   }
 
-  // 주사위 애니메이션만 표시 (화면 하단 중앙에 고정 표시)
-  showDiceAnimation(value, onComplete) {
-    this.diceResultText.setPosition(this.scale.width / 2, this.scale.height - 160);
+  // 주사위 애니메이션 표시: 굴리는 플레이어 캐릭터 머리 위에 숫자가 뜨도록 위치 지정
+  showDiceAnimation(value, playerId, onComplete) {
+    const pawn = playerId ? this.playerManager.pawns[playerId] : null;
+    if (pawn) {
+      this.diceResultText.setPosition(pawn.sprite.x, pawn.sprite.y - 90);
+    } else {
+      // 대상 캐릭터를 찾을 수 없으면 현재 화면 중앙(월드 좌표)에 표시
+      const cam = this.cameras.main;
+      this.diceResultText.setPosition(cam.midPoint.x, cam.midPoint.y);
+    }
     this.diceResultText.setVisible(true).setScale(1).setText('?');
     let count = 0;
     this.time.addEvent({
@@ -217,34 +221,8 @@ export default class BoardScene extends Phaser.Scene {
     this._local.isAnimating = true;
 
     const diceValue = Phaser.Math.Between(1, 6);
-    const pawn = this.playerManager.pawns['local'];
-    if (pawn) {
-      this.diceResultText.setPosition(pawn.sprite.x, pawn.sprite.y - 70);
-    }
-
-    this.diceResultText.setVisible(true).setScale(1).setText('?');
-    let count = 0;
-    this.time.addEvent({
-      delay: 60,
-      repeat: 14,
-      callback: () => {
-        count++;
-        this.diceResultText.setText(`${Phaser.Math.Between(1, 6)}`);
-        if (count >= 15) {
-          this.diceResultText.setText(`${diceValue}`);
-          this.tweens.add({
-            targets: this.diceResultText,
-            scaleX: 1.5, scaleY: 1.5,
-            duration: 150, yoyo: true, ease: 'Back.easeOut',
-            onComplete: () => {
-              this.time.delayedCall(400, () => {
-                this.diceResultText.setVisible(false);
-                this._doLocalMove(this._local.nodeId, diceValue);
-              });
-            },
-          });
-        }
-      },
+    this.showDiceAnimation(diceValue, 'local', () => {
+      this._doLocalMove(this._local.nodeId, diceValue);
     });
   }
 
