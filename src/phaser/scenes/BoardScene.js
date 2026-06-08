@@ -311,6 +311,12 @@ export default class BoardScene extends Phaser.Scene {
     });
   }
 
+  // 서버가 보낸 실제 이동 경로(node 이름 배열)를 그대로 순차 hop.
+  // 경로 추측(BFS)을 하지 않으므로 서버 로직과 100% 일치하며 역방향 이동이 없다.
+  movePlayerPath(playerId, pathNodeNames, onComplete) {
+    this.playerManager.animatePath(playerId, pathNodeNames, onComplete);
+  }
+
   // pathNodeNames: 도착까지 거쳐가는 노드 이름 배열(시작 제외)
   // 목적지 1개만 주어지면 directed BFS로 전체 경로를 자동 복원
   movePlayer(playerId, pathNodeNames, onComplete) {

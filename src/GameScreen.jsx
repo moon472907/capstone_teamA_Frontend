@@ -182,8 +182,6 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
       }
 
       case WS_EVENTS.PLAYER_MOVED: {
-        // 서버는 nodeNumber(1~53)를 보냄 → directed BFS로 전체 경로 복원 후 hop 이동
-        const n    = payload.nodeNumber ?? payload.tileIndex ?? payload.toTileId;
         const scene = getBoardScene();
         if (!scene) break;
         if (payload.playerId === myPlayerIdRef.current) {
@@ -193,7 +191,17 @@ function GameScreen({ onGoBack, selectedCharacter, gameId, playerId, user, acces
           // 상대 이동: 줌인으로 이동 감상
           scene.zoomToPlayer(payload.playerId);
         }
-        scene.movePlayer(payload.playerId, [toNodeId(n)]);
+        // 서버가 실제로 걸어간 경로(path: nodeNumber 배열)를 그대로 hop 애니메이션.
+        // 프론트에서 경로를 추측하지 않으므로 역방향 이동(왔다갔다)이 발생하지 않는다.
+        const path = payload.path;
+        if (Array.isArray(path)) {
+          // path가 비어 있으면(현재 칸에서 바로 분기) 이동 없음
+          if (path.length > 0) scene.movePlayerPath(payload.playerId, path.map(toNodeId));
+        } else {
+          // 구버전 호환 fallback: 도착 칸만 온 경우 directed BFS로 복원
+          const n = payload.nodeNumber ?? payload.tileIndex ?? payload.toTileId;
+          scene.movePlayer(payload.playerId, [toNodeId(n)]);
+        }
         break;
       }
 
